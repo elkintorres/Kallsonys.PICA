@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  kallsonys.pica.apiproducts:
+    image: ${DOCKER_REGISTRY-}kallsonyspicaapiproducts
+    build:
+      context: .\Kallsonys.PICA.ApiProducts
+      dockerfile: Dockerfile
+
+  kallsonys.pica.apioffers:
+    image: ${DOCKER_REGISTRY-}kallsonyspicaapioffers
+    build:
+      context: .\Kallsonys.PICA.ApiOffers
+      dockerfile: Dockerfile
+

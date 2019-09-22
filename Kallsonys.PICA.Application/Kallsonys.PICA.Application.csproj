@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3C36E9D8-C7CD-463E-BD89-22132E69FCFA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kallsonys.PICA.Application</RootNamespace>
+    <AssemblyName>Kallsonys.PICA.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=4.7.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.7.1\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.WebApi, Version=4.7.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Integration.WebApi.4.7.1\lib\net45\SimpleInjector.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTO\ProductDTO\Error.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductByCodeGet.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGet.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductIdGet.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductPost.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductTopFiveGet.cs" />
+    <Compile Include="DTO\ProductDTO\Product.cs" />
+    <Compile Include="DTO\ProductDTO\ProductAdapterDTO.cs" />
+    <Compile Include="DTO\ProductDTO\Products.cs" />
+    <Compile Include="IoC.cs" />
+    <Compile Include="IServices\IOfferService.cs" />
+    <Compile Include="IServices\IProductService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\OfferService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Kallsonys.PICA.ContractsRepositories\Kallsonys.PICA.ContractsRepositories.csproj">
+      <Project>{46b3e6a6-5fa0-48fd-8ab1-2c13e96c1f6b}</Project>
+      <Name>Kallsonys.PICA.ContractsRepositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kallsonys.PICA.CrossCutting.Configuration\Kallsonys.PICA.CrossCutting.Configuration.csproj">
+      <Project>{cf2f145c-7f7e-4532-9db2-57596eb70f10}</Project>
+      <Name>Kallsonys.PICA.CrossCutting.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kallsonys.PICA.Domain\Kallsonys.PICA.Domain.csproj">
+      <Project>{199500bf-3268-45fd-8568-03c987b16754}</Project>
+      <Name>Kallsonys.PICA.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kallsonys.PICA.Infraestructure\Kallsonys.PICA.Infraestructure.csproj">
+      <Project>{c65698e3-8dcd-4c42-abd4-52d98d1df5a3}</Project>
+      <Name>Kallsonys.PICA.Infraestructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

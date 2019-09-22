@@ -1,0 +1,435 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BDB2CModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Campaña">
+          <Key>
+            <PropertyRef Name="IdCamapaña" />
+          </Key>
+          <Property Name="IdCamapaña" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="FechaIncio" Type="date" Nullable="false" />
+          <Property Name="FechaFin" Type="date" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="1500" Nullable="false" />
+          <Property Name="Descuento" Type="numeric" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="IdProducto" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="4000" />
+        </EntityType>
+        <EntityType Name="Imagenes">
+          <Key>
+            <PropertyRef Name="IdImagen" />
+          </Key>
+          <Property Name="IdImagen" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="200" />
+          <Property Name="URLMiniatura" Type="varchar" MaxLength="256" />
+          <Property Name="URLNormal" Type="varchar" MaxLength="256" />
+          <Property Name="IdProducto" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="IdProducto" />
+          </Key>
+          <Property Name="IdProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdentificadorProducto" Type="numeric" Precision="22" Scale="0" />
+          <Property Name="Nombre" Type="varchar" MaxLength="200" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="4000" />
+          <Property Name="IdCategoria" Type="int" Nullable="false" />
+          <Property Name="PrecioDeLista" Type="numeric" Precision="22" Scale="0" />
+          <Property Name="IdProductor" Type="int" />
+          <Property Name="IdImagen" Type="int" />
+        </EntityType>
+        <EntityType Name="Productor">
+          <Key>
+            <PropertyRef Name="IdProductor" />
+          </Key>
+          <Property Name="IdProductor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProveedorMensjeria">
+          <Key>
+            <PropertyRef Name="IProveedorMensajeria" />
+          </Key>
+          <Property Name="IProveedorMensajeria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Habilitado" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProveedorProducto">
+          <Key>
+            <PropertyRef Name="IdProveedorProducto" />
+          </Key>
+          <Property Name="IdProveedorProducto" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Habilitado" Type="bit" Nullable="false" />
+          <Property Name="IdProducto" Type="int" />
+        </EntityType>
+        <Association Name="FK_Campaña_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
+          <End Role="Campaña" Type="Self.Campaña" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="Campaña">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Imagenes_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
+          <End Role="Imagenes" Type="Self.Imagenes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="Imagenes">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producto_Categoria">
+          <End Role="Categoria" Type="Self.Categoria" Multiplicity="1" />
+          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="IdCategoria" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producto_Productor">
+          <End Role="Productor" Type="Self.Productor" Multiplicity="0..1" />
+          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Productor">
+              <PropertyRef Name="IdProductor" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdProductor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProveedorProducto_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="ProveedorProducto" Type="Self.ProveedorProducto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="ProveedorProducto">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BDB2CModelStoreContainer">
+          <EntitySet Name="Campaña" EntityType="Self.Campaña" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categoria" EntityType="Self.Categoria" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Imagenes" EntityType="Self.Imagenes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Productor" EntityType="Self.Productor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProveedorMensjeria" EntityType="Self.ProveedorMensjeria" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProveedorProducto" EntityType="Self.ProveedorProducto" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Campaña_Producto" Association="Self.FK_Campaña_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Campaña" EntitySet="Campaña" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Imagenes_Producto" Association="Self.FK_Imagenes_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Imagenes" EntitySet="Imagenes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Categoria" Association="Self.FK_Producto_Categoria">
+            <End Role="Categoria" EntitySet="Categoria" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Productor" Association="Self.FK_Producto_Productor">
+            <End Role="Productor" EntitySet="Productor" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProveedorProducto_Producto" Association="Self.FK_ProveedorProducto_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="ProveedorProducto" EntitySet="ProveedorProducto" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BDB2CModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Campaña">
+          <Key>
+            <PropertyRef Name="IdCamapaña" />
+          </Key>
+          <Property Name="IdCamapaña" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaIncio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaFin" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Descripcion" Type="String" MaxLength="1500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descuento" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="IdProducto" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Campaña_Producto" FromRole="Campaña" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="Imagenes">
+          <Key>
+            <PropertyRef Name="IdImagen" />
+          </Key>
+          <Property Name="IdImagen" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="URLMiniatura" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="URLNormal" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="IdProducto" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Imagenes_Producto" FromRole="Imagenes" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="IdProducto" />
+          </Key>
+          <Property Name="IdProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdentificadorProducto" Type="Decimal" Precision="22" Scale="0" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" />
+          <Property Name="PrecioDeLista" Type="Decimal" Precision="22" Scale="0" />
+          <Property Name="IdProductor" Type="Int32" />
+          <Property Name="IdImagen" Type="Int32" />
+          <NavigationProperty Name="Campaña" Relationship="Self.FK_Campaña_Producto" FromRole="Producto" ToRole="Campaña" />
+          <NavigationProperty Name="Categoria" Relationship="Self.FK_Producto_Categoria" FromRole="Producto" ToRole="Categoria" />
+          <NavigationProperty Name="Imagenes" Relationship="Self.FK_Imagenes_Producto" FromRole="Producto" ToRole="Imagenes" />
+          <NavigationProperty Name="Productor" Relationship="Self.FK_Producto_Productor" FromRole="Producto" ToRole="Productor" />
+          <NavigationProperty Name="ProveedorProducto" Relationship="Self.FK_ProveedorProducto_Producto" FromRole="Producto" ToRole="ProveedorProducto" />
+        </EntityType>
+        <EntityType Name="Productor">
+          <Key>
+            <PropertyRef Name="IdProductor" />
+          </Key>
+          <Property Name="IdProductor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Productor" FromRole="Productor" ToRole="Producto" />
+        </EntityType>
+        <EntityType Name="ProveedorMensjeria">
+          <Key>
+            <PropertyRef Name="IProveedorMensajeria" />
+          </Key>
+          <Property Name="IProveedorMensajeria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Habilitado" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProveedorProducto">
+          <Key>
+            <PropertyRef Name="IdProveedorProducto" />
+          </Key>
+          <Property Name="IdProveedorProducto" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Habilitado" Type="Boolean" Nullable="false" />
+          <Property Name="IdProducto" Type="Int32" />
+          <NavigationProperty Name="Producto" Relationship="Self.FK_ProveedorProducto_Producto" FromRole="ProveedorProducto" ToRole="Producto" />
+        </EntityType>
+        <Association Name="FK_Campaña_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
+          <End Role="Campaña" Type="Self.Campaña" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="Campaña">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producto_Categoria">
+          <End Role="Categoria" Type="Self.Categoria" Multiplicity="1" />
+          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="IdCategoria" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Imagenes_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
+          <End Role="Imagenes" Type="Self.Imagenes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="Imagenes">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producto_Productor">
+          <End Role="Productor" Type="Self.Productor" Multiplicity="0..1" />
+          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Productor">
+              <PropertyRef Name="IdProductor" />
+            </Principal>
+            <Dependent Role="Producto">
+              <PropertyRef Name="IdProductor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProveedorProducto_Producto">
+          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
+          <End Role="ProveedorProducto" Type="Self.ProveedorProducto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producto">
+              <PropertyRef Name="IdProducto" />
+            </Principal>
+            <Dependent Role="ProveedorProducto">
+              <PropertyRef Name="IdProducto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Campaña" EntityType="Self.Campaña" />
+          <EntitySet Name="Categoria" EntityType="Self.Categoria" />
+          <EntitySet Name="Imagenes" EntityType="Self.Imagenes" />
+          <EntitySet Name="Producto" EntityType="Self.Producto" />
+          <EntitySet Name="Productor" EntityType="Self.Productor" />
+          <EntitySet Name="ProveedorMensjeria" EntityType="Self.ProveedorMensjeria" />
+          <EntitySet Name="ProveedorProducto" EntityType="Self.ProveedorProducto" />
+          <AssociationSet Name="FK_Campaña_Producto" Association="Self.FK_Campaña_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Campaña" EntitySet="Campaña" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Categoria" Association="Self.FK_Producto_Categoria">
+            <End Role="Categoria" EntitySet="Categoria" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Imagenes_Producto" Association="Self.FK_Imagenes_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Imagenes" EntitySet="Imagenes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Productor" Association="Self.FK_Producto_Productor">
+            <End Role="Productor" EntitySet="Productor" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProveedorProducto_Producto" Association="Self.FK_ProveedorProducto_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="ProveedorProducto" EntitySet="ProveedorProducto" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BDB2CModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Campaña">
+            <EntityTypeMapping TypeName="BDB2CModel.Campaña">
+              <MappingFragment StoreEntitySet="Campaña">
+                <ScalarProperty Name="IdCamapaña" ColumnName="IdCamapaña" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaIncio" ColumnName="FechaIncio" />
+                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Descuento" ColumnName="Descuento" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categoria">
+            <EntityTypeMapping TypeName="BDB2CModel.Categoria">
+              <MappingFragment StoreEntitySet="Categoria">
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Imagenes">
+            <EntityTypeMapping TypeName="BDB2CModel.Imagenes">
+              <MappingFragment StoreEntitySet="Imagenes">
+                <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="URLMiniatura" ColumnName="URLMiniatura" />
+                <ScalarProperty Name="URLNormal" ColumnName="URLNormal" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producto">
+            <EntityTypeMapping TypeName="BDB2CModel.Producto">
+              <MappingFragment StoreEntitySet="Producto">
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="IdentificadorProducto" ColumnName="IdentificadorProducto" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="PrecioDeLista" ColumnName="PrecioDeLista" />
+                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
+                <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Productor">
+            <EntityTypeMapping TypeName="BDB2CModel.Productor">
+              <MappingFragment StoreEntitySet="Productor">
+                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProveedorMensjeria">
+            <EntityTypeMapping TypeName="BDB2CModel.ProveedorMensjeria">
+              <MappingFragment StoreEntitySet="ProveedorMensjeria">
+                <ScalarProperty Name="IProveedorMensajeria" ColumnName="IProveedorMensajeria" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProveedorProducto">
+            <EntityTypeMapping TypeName="BDB2CModel.ProveedorProducto">
+              <MappingFragment StoreEntitySet="ProveedorProducto">
+                <ScalarProperty Name="IdProveedorProducto" ColumnName="IdProveedorProducto" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

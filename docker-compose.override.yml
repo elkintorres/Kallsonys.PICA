@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  kallsonys.pica.apiproducts:
+    ports:
+      - "80"
+  kallsonys.pica.apioffers:
+    ports:
+      - "80"
+networks:
+  default:
+    external:
+      name: nat
+
