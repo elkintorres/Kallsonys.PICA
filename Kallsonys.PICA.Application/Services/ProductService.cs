@@ -1,4 +1,4 @@
-﻿using Kallsonys.PICA.ApiProducts.Product.Models;
+﻿using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.CrossCutting.Configuration.Messages;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Kallsonys.PICA.Application.Services
 {
-    public class ProductService: IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository Repository;
         public ProductService(IProductRepository repository)
@@ -24,14 +24,10 @@ namespace Kallsonys.PICA.Application.Services
         /// <param name="register"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<MultipleProductPost> CreateAsync(Product register, CancellationTokenSource token)
+        public async Task<Boolean> CreateAsync(Product register, CancellationTokenSource token)
         {
             var result = await Repository.CreateAsync(new Domain.Entities.Producto(), token);
-            return new MultipleProductPost()
-            {
-                Ipbool = true,
-                Error = null
-            };
+            return result.IdProducto > 0;
         }
 
         /// <summary>
@@ -44,6 +40,11 @@ namespace Kallsonys.PICA.Application.Services
         {
             var listProducts = await Repository.GetByExpressionAsync(x => x.IdentificadorProducto == code, token);
             return listProducts.ToList();
+        }
+
+        public Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Kallsonys.PICA.Application.Services
         {
             MultipleProductIdGet result = new MultipleProductIdGet();
             var register = await Repository.GetByKeyAsync(id, token);
-            
+
             if (register == null)
             {
                 result.Product = null;
@@ -80,7 +81,7 @@ namespace Kallsonys.PICA.Application.Services
             }
             else
             {
-                result.Product = register.Adpater();
+               // result.Product = register.Adpater();
                 result.Error = null;
             }
 
@@ -97,6 +98,21 @@ namespace Kallsonys.PICA.Application.Services
         {
             var listProducts = await Repository.GetByExpressionAsync(x => topFive.Contains(x.IdProducto), token);
             return listProducts.ToList();
+        }
+
+        Task<IList<Product>> IProductService.GetByCriteriaAsync(string criteria, CancellationTokenSource token)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Product> IProductService.GetByIdAsync(int id, CancellationTokenSource token)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IList<Product>> IProductService.GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
+        {
+            throw new NotImplementedException();
         }
     }
 }

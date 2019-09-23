@@ -1,0 +1,104 @@
+#%RAML 1.0
+title: "API Product"
+version: "v1"
+baseUri: https://pruebas.com/version
+mediaType: application/json
+types:
+  Error: !include includes/error.schema.json
+  Product:
+    type: object
+    properties:
+      Id:
+        type: integer
+        minimum: 0
+        description:  "Llave primaria"
+        required: true
+      Name:
+        type: string
+        description: "Nombre del producto"
+        required: true
+      Code:
+        type: string
+        description: "Codigo del producto"
+        required: true
+      Description:
+        type: string
+        description:  "Descripcion del producto"
+        required: true
+      IdCategoria:
+        type: integer
+        minimum: 0
+        description: "Id Categoria asociada al producto"
+        required: true
+      ImageBigURL:
+        type: string
+        description: "URL de la imagen grande que representa al producto."
+        required: true
+      ImagaSmallURL:
+        type: string
+        description:  "URL de la imagen pequeña que representa al producto."
+        required: true
+/Product:
+  post:
+    description: "Recurso para la creacion de productos"
+    body:
+      application/json:
+        type: Product
+    responses:
+      201:
+        body:
+          application/json:
+            type: boolean
+      500:
+        body:
+          application/json:
+            type: Error
+  /id:
+    get:
+      queryParameters:
+        id:
+          type: number
+          format: int32
+          minimum: 0
+          required: true
+      description: "Recurso para la consulta de un producto por id"
+      responses:
+        200:
+          body:
+            application/json:
+              type: Product
+        500:
+          body:
+            application/json:
+              type: Error
+  /byCriteria:
+    get:
+      description:  "Recurso para la consulta de productos por nombre o por descripción"
+      queryParameters:
+        criteria:
+          type: string
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              type: Product []
+        500:
+          body:
+            application/json:
+              type: Error
+  /topFive:
+    get:
+      description:  "Recurso para la consulta del top 5 de productos"
+      queryParameters:
+        topFiveProducts:
+          type: string []
+      responses:
+        200:
+          body:
+            application/json:
+              type: Product []
+        500:
+          body:
+            application/json:
+              type: Error

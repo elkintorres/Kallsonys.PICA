@@ -8,17 +8,17 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kallsonys.PICA.ApiProducts.Product.Models
+namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
 {
     /// <summary>
-    /// Multiple Response Types Products, Error
+    /// Multiple Response Types Product, Error
     /// </summary>
-    public partial class MultipleProductByCriteriaGet
+    public partial class MultipleProductTopFiveGet
     {
         
 
 
-        public Products Products { get; set; }
+        public IList<Product> Product { get; set; }
 
 
         public Error Error { get; set; }

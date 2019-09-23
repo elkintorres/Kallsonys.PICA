@@ -61,15 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\ProductDTO\Error.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductByCodeGet.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGet.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductIdGet.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductPost.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductTopFiveGet.cs" />
-    <Compile Include="DTO\ProductDTO\Product.cs" />
-    <Compile Include="DTO\ProductDTO\ProductAdapterDTO.cs" />
-    <Compile Include="DTO\ProductDTO\Products.cs" />
+    <Compile Include="Adapters\ProductAdapter.cs" />
+    <Compile Include="DTO\ProductDTO\ErrorV1.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGetV1.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductIdGetV1.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductPostV1.cs" />
+    <Compile Include="DTO\ProductDTO\MultipleProductTopFiveGetV1.cs" />
+    <Compile Include="DTO\ProductDTO\ProductV1.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IServices\IOfferService.cs" />
     <Compile Include="IServices\IProductService.cs" />

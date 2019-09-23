@@ -1,4 +1,4 @@
-﻿using Kallsonys.PICA.ApiProducts.Product.Models;
+﻿using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +10,11 @@ namespace Kallsonys.PICA.Application.IServices
 {
     public interface IProductService
     {
-        Task<MultipleProductIdGet> GetByIdAsync(int id, CancellationTokenSource token);
-        Task<Object> GetByCodeAsync(Decimal code, CancellationTokenSource token);
-
-        Task<Object> GetByCriteriaAsync(string criteria, CancellationTokenSource token);
-
-        Task<Object> GetTopFiveAsync(IList<Int32> topFive, CancellationTokenSource token);
-
-        Task<MultipleProductPost> CreateAsync(Product register, CancellationTokenSource token);
+        Task<Product> GetByIdAsync(int id, CancellationTokenSource token);
+        Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token);
+        Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token);
+        Task<IList<Product>> GetTopFiveAsync(IList<Int32> topFive, CancellationTokenSource token);
+        Task<Boolean> CreateAsync(Product register, CancellationTokenSource token);
 
     }
 }

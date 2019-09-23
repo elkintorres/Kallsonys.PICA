@@ -8,17 +8,23 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kallsonys.PICA.ApiProducts.Product.Models
+namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
 {
-    public partial class Products
+    public partial class Error
     {
         
 
         /// <summary>
-        /// Llave primaria
+        /// codigo de respuesta
         /// </summary>
-        [Range(0.00,double.MaxValue)]
-        public int? Id { get; set; }
+
+        public int? Code { get; set; }
+
+        /// <summary>
+        /// Muestra el mensaje corrrespondiente
+        /// </summary>
+        [Required]
+        public string Description { get; set; }
     } // end class
 
 } // end Models namespace
