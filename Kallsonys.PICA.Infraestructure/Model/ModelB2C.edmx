@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BDB2CModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BDB2CModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Campaña">
           <Key>
             <PropertyRef Name="IdCamapaña" />
@@ -39,7 +39,7 @@
             <PropertyRef Name="IdProducto" />
           </Key>
           <Property Name="IdProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdentificadorProducto" Type="numeric" Precision="22" Scale="0" />
+          <Property Name="IdentificadorProducto" Type="varchar" MaxLength="50" />
           <Property Name="Nombre" Type="varchar" MaxLength="200" />
           <Property Name="Descripcion" Type="varchar" MaxLength="4000" />
           <Property Name="IdCategoria" Type="int" Nullable="false" />
@@ -160,23 +160,51 @@
             <End Role="ProveedorProducto" EntitySet="ProveedorProducto" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BDB2CModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Campaña" EntityType="BDB2CModel.Campaña" />
+          <EntitySet Name="Categoria" EntityType="BDB2CModel.Categoria" />
+          <EntitySet Name="Imagenes" EntityType="BDB2CModel.Imagenes" />
+          <EntitySet Name="Producto" EntityType="BDB2CModel.Producto" />
+          <EntitySet Name="Productor" EntityType="BDB2CModel.Productor" />
+          <EntitySet Name="ProveedorMensjeria" EntityType="BDB2CModel.ProveedorMensjeria" />
+          <EntitySet Name="ProveedorProducto" EntityType="BDB2CModel.ProveedorProducto" />
+          <AssociationSet Name="FK_Campaña_Producto" Association="BDB2CModel.FK_Campaña_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Campaña" EntitySet="Campaña" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Categoria" Association="BDB2CModel.FK_Producto_Categoria">
+            <End Role="Categoria" EntitySet="Categoria" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Imagenes_Producto" Association="BDB2CModel.FK_Imagenes_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="Imagenes" EntitySet="Imagenes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producto_Productor" Association="BDB2CModel.FK_Producto_Productor">
+            <End Role="Productor" EntitySet="Productor" />
+            <End Role="Producto" EntitySet="Producto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProveedorProducto_Producto" Association="BDB2CModel.FK_ProveedorProducto_Producto">
+            <End Role="Producto" EntitySet="Producto" />
+            <End Role="ProveedorProducto" EntitySet="ProveedorProducto" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Campaña">
           <Key>
             <PropertyRef Name="IdCamapaña" />
           </Key>
           <Property Name="IdCamapaña" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="FechaIncio" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="FechaFin" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Descripcion" Type="String" MaxLength="1500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descuento" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="1500" FixedLength="false" Unicode="false" />
+          <Property Name="Descuento" Type="Decimal" Nullable="false" Precision="5" Scale="2" />
           <Property Name="IdProducto" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_Campaña_Producto" FromRole="Campaña" ToRole="Producto" />
+          <NavigationProperty Name="Producto" Relationship="BDB2CModel.FK_Campaña_Producto" FromRole="Campaña" ToRole="Producto" />
         </EntityType>
         <EntityType Name="Categoria">
           <Key>
@@ -184,7 +212,7 @@
           </Key>
           <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
+          <NavigationProperty Name="Producto" Relationship="BDB2CModel.FK_Producto_Categoria" FromRole="Categoria" ToRole="Producto" />
         </EntityType>
         <EntityType Name="Imagenes">
           <Key>
@@ -195,40 +223,40 @@
           <Property Name="URLMiniatura" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="URLNormal" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="IdProducto" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_Imagenes_Producto" FromRole="Imagenes" ToRole="Producto" />
+          <NavigationProperty Name="Producto" Relationship="BDB2CModel.FK_Imagenes_Producto" FromRole="Imagenes" ToRole="Producto" />
         </EntityType>
         <EntityType Name="Producto">
           <Key>
             <PropertyRef Name="IdProducto" />
           </Key>
           <Property Name="IdProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdentificadorProducto" Type="Decimal" Precision="22" Scale="0" />
+          <Property Name="IdentificadorProducto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Descripcion" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
           <Property Name="IdCategoria" Type="Int32" Nullable="false" />
           <Property Name="PrecioDeLista" Type="Decimal" Precision="22" Scale="0" />
           <Property Name="IdProductor" Type="Int32" />
           <Property Name="IdImagen" Type="Int32" />
-          <NavigationProperty Name="Campaña" Relationship="Self.FK_Campaña_Producto" FromRole="Producto" ToRole="Campaña" />
-          <NavigationProperty Name="Categoria" Relationship="Self.FK_Producto_Categoria" FromRole="Producto" ToRole="Categoria" />
-          <NavigationProperty Name="Imagenes" Relationship="Self.FK_Imagenes_Producto" FromRole="Producto" ToRole="Imagenes" />
-          <NavigationProperty Name="Productor" Relationship="Self.FK_Producto_Productor" FromRole="Producto" ToRole="Productor" />
-          <NavigationProperty Name="ProveedorProducto" Relationship="Self.FK_ProveedorProducto_Producto" FromRole="Producto" ToRole="ProveedorProducto" />
+          <NavigationProperty Name="Campaña" Relationship="BDB2CModel.FK_Campaña_Producto" FromRole="Producto" ToRole="Campaña" />
+          <NavigationProperty Name="Categoria" Relationship="BDB2CModel.FK_Producto_Categoria" FromRole="Producto" ToRole="Categoria" />
+          <NavigationProperty Name="Imagenes" Relationship="BDB2CModel.FK_Imagenes_Producto" FromRole="Producto" ToRole="Imagenes" />
+          <NavigationProperty Name="Productor" Relationship="BDB2CModel.FK_Producto_Productor" FromRole="Producto" ToRole="Productor" />
+          <NavigationProperty Name="ProveedorProducto" Relationship="BDB2CModel.FK_ProveedorProducto_Producto" FromRole="Producto" ToRole="ProveedorProducto" />
         </EntityType>
         <EntityType Name="Productor">
           <Key>
             <PropertyRef Name="IdProductor" />
           </Key>
           <Property Name="IdProductor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_Producto_Productor" FromRole="Productor" ToRole="Producto" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Producto" Relationship="BDB2CModel.FK_Producto_Productor" FromRole="Productor" ToRole="Producto" />
         </EntityType>
         <EntityType Name="ProveedorMensjeria">
           <Key>
             <PropertyRef Name="IProveedorMensajeria" />
           </Key>
           <Property Name="IProveedorMensajeria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Habilitado" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="ProveedorProducto">
@@ -236,14 +264,14 @@
             <PropertyRef Name="IdProveedorProducto" />
           </Key>
           <Property Name="IdProveedorProducto" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Habilitado" Type="Boolean" Nullable="false" />
           <Property Name="IdProducto" Type="Int32" />
-          <NavigationProperty Name="Producto" Relationship="Self.FK_ProveedorProducto_Producto" FromRole="ProveedorProducto" ToRole="Producto" />
+          <NavigationProperty Name="Producto" Relationship="BDB2CModel.FK_ProveedorProducto_Producto" FromRole="ProveedorProducto" ToRole="Producto" />
         </EntityType>
         <Association Name="FK_Campaña_Producto">
-          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
-          <End Role="Campaña" Type="Self.Campaña" Multiplicity="*" />
+          <End Type="BDB2CModel.Producto" Role="Producto" Multiplicity="1" />
+          <End Type="BDB2CModel.Campaña" Role="Campaña" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Producto">
               <PropertyRef Name="IdProducto" />
@@ -254,8 +282,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Producto_Categoria">
-          <End Role="Categoria" Type="Self.Categoria" Multiplicity="1" />
-          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <End Type="BDB2CModel.Categoria" Role="Categoria" Multiplicity="1" />
+          <End Type="BDB2CModel.Producto" Role="Producto" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Categoria">
               <PropertyRef Name="IdCategoria" />
@@ -266,8 +294,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Imagenes_Producto">
-          <End Role="Producto" Type="Self.Producto" Multiplicity="1" />
-          <End Role="Imagenes" Type="Self.Imagenes" Multiplicity="*" />
+          <End Type="BDB2CModel.Producto" Role="Producto" Multiplicity="1" />
+          <End Type="BDB2CModel.Imagenes" Role="Imagenes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Producto">
               <PropertyRef Name="IdProducto" />
@@ -278,8 +306,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Producto_Productor">
-          <End Role="Productor" Type="Self.Productor" Multiplicity="0..1" />
-          <End Role="Producto" Type="Self.Producto" Multiplicity="*" />
+          <End Type="BDB2CModel.Productor" Role="Productor" Multiplicity="0..1" />
+          <End Type="BDB2CModel.Producto" Role="Producto" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Productor">
               <PropertyRef Name="IdProductor" />
@@ -290,8 +318,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProveedorProducto_Producto">
-          <End Role="Producto" Type="Self.Producto" Multiplicity="0..1" />
-          <End Role="ProveedorProducto" Type="Self.ProveedorProducto" Multiplicity="*" />
+          <End Type="BDB2CModel.Producto" Role="Producto" Multiplicity="0..1" />
+          <End Type="BDB2CModel.ProveedorProducto" Role="ProveedorProducto" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Producto">
               <PropertyRef Name="IdProducto" />
@@ -301,35 +329,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Campaña" EntityType="Self.Campaña" />
-          <EntitySet Name="Categoria" EntityType="Self.Categoria" />
-          <EntitySet Name="Imagenes" EntityType="Self.Imagenes" />
-          <EntitySet Name="Producto" EntityType="Self.Producto" />
-          <EntitySet Name="Productor" EntityType="Self.Productor" />
-          <EntitySet Name="ProveedorMensjeria" EntityType="Self.ProveedorMensjeria" />
-          <EntitySet Name="ProveedorProducto" EntityType="Self.ProveedorProducto" />
-          <AssociationSet Name="FK_Campaña_Producto" Association="Self.FK_Campaña_Producto">
-            <End Role="Producto" EntitySet="Producto" />
-            <End Role="Campaña" EntitySet="Campaña" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Producto_Categoria" Association="Self.FK_Producto_Categoria">
-            <End Role="Categoria" EntitySet="Categoria" />
-            <End Role="Producto" EntitySet="Producto" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Imagenes_Producto" Association="Self.FK_Imagenes_Producto">
-            <End Role="Producto" EntitySet="Producto" />
-            <End Role="Imagenes" EntitySet="Imagenes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Producto_Productor" Association="Self.FK_Producto_Productor">
-            <End Role="Productor" EntitySet="Productor" />
-            <End Role="Producto" EntitySet="Producto" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProveedorProducto_Producto" Association="Self.FK_ProveedorProducto_Producto">
-            <End Role="Producto" EntitySet="Producto" />
-            <End Role="ProveedorProducto" EntitySet="ProveedorProducto" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -339,73 +338,73 @@
           <EntitySetMapping Name="Campaña">
             <EntityTypeMapping TypeName="BDB2CModel.Campaña">
               <MappingFragment StoreEntitySet="Campaña">
-                <ScalarProperty Name="IdCamapaña" ColumnName="IdCamapaña" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="FechaIncio" ColumnName="FechaIncio" />
-                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="Descuento" ColumnName="Descuento" />
                 <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="Descuento" ColumnName="Descuento" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+                <ScalarProperty Name="FechaIncio" ColumnName="FechaIncio" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCamapaña" ColumnName="IdCamapaña" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categoria">
             <EntityTypeMapping TypeName="BDB2CModel.Categoria">
               <MappingFragment StoreEntitySet="Categoria">
-                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Imagenes">
             <EntityTypeMapping TypeName="BDB2CModel.Imagenes">
               <MappingFragment StoreEntitySet="Imagenes">
-                <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="URLMiniatura" ColumnName="URLMiniatura" />
-                <ScalarProperty Name="URLNormal" ColumnName="URLNormal" />
                 <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="URLNormal" ColumnName="URLNormal" />
+                <ScalarProperty Name="URLMiniatura" ColumnName="URLMiniatura" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Producto">
             <EntityTypeMapping TypeName="BDB2CModel.Producto">
               <MappingFragment StoreEntitySet="Producto">
-                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
-                <ScalarProperty Name="IdentificadorProducto" ColumnName="IdentificadorProducto" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
-                <ScalarProperty Name="PrecioDeLista" ColumnName="PrecioDeLista" />
-                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
                 <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
+                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
+                <ScalarProperty Name="PrecioDeLista" ColumnName="PrecioDeLista" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdentificadorProducto" ColumnName="IdentificadorProducto" />
+                <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Productor">
             <EntityTypeMapping TypeName="BDB2CModel.Productor">
               <MappingFragment StoreEntitySet="Productor">
-                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdProductor" ColumnName="IdProductor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ProveedorMensjeria">
             <EntityTypeMapping TypeName="BDB2CModel.ProveedorMensjeria">
               <MappingFragment StoreEntitySet="ProveedorMensjeria">
-                <ScalarProperty Name="IProveedorMensajeria" ColumnName="IProveedorMensajeria" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IProveedorMensajeria" ColumnName="IProveedorMensajeria" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ProveedorProducto">
             <EntityTypeMapping TypeName="BDB2CModel.ProveedorProducto">
               <MappingFragment StoreEntitySet="ProveedorProducto">
-                <ScalarProperty Name="IdProveedorProducto" ColumnName="IdProveedorProducto" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
                 <ScalarProperty Name="IdProducto" ColumnName="IdProducto" />
+                <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdProveedorProducto" ColumnName="IdProveedorProducto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -21,6 +21,10 @@ types:
         type: string
         description: "Codigo del producto"
         required: true
+      ListPrice:
+        type: number
+        description: "Precio del producto"
+        minimum: 0
       Description:
         type: string
         description:  "Descripcion del producto"
@@ -30,12 +34,13 @@ types:
         minimum: 0
         description: "Id Categoria asociada al producto"
         required: true
-      ImageBigURL:
-        type: string
+      ImagesURL:
+        type: string []
         description: "URL de la imagen grande que representa al producto."
         required: true
-      ImagaSmallURL:
-        type: string
+      IdProducer:
+        type: number
+        format: int32
         description:  "URL de la imagen pequeña que representa al producto."
         required: true
 /Product:

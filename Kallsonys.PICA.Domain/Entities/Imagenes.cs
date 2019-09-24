@@ -7,19 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Kallsonys.PICA.Domain.Entities
+using System;
+using System.Collections.Generic;
+
+public partial class Imagenes
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class Imagenes
-    {
-        public int IdImagen { get; set; }
-        public string Nombre { get; set; }
-        public string URLMiniatura { get; set; }
-        public string URLNormal { get; set; }
-        public int IdProducto { get; set; }
-    
-        public virtual Producto Producto { get; set; }
-    }
+    public int IdImagen { get; set; }
+    public string Nombre { get; set; }
+    public string URLMiniatura { get; set; }
+    public string URLNormal { get; set; }
+    public int IdProducto { get; set; }
+
+    public virtual Producto Producto { get; set; }
 }

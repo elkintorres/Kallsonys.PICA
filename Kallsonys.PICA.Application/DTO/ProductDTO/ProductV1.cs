@@ -25,6 +25,10 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
         public string Code { get; set; }
 
         [Required]
+        [Range(0.00,double.MaxValue)]
+        public decimal ListPrice { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
         [Required]
@@ -32,10 +36,10 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
         public int IdCategoria { get; set; }
 
         [Required]
-        public string ImageBigURL { get; set; }
+        public IList<string> ImagesURL { get; set; }
 
         [Required]
-        public string ImagaSmallURL { get; set; }
+        public int IdProducer { get; set; }
     } // end class
 
 } // end Models namespace

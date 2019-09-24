@@ -19,8 +19,6 @@ namespace Kallsonys.PICA.Infraestructure.Model
         public Entities()
             : base("name=Entities")
         {
-            this.Configuration.LazyLoadingEnabled = false;
-            this.Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

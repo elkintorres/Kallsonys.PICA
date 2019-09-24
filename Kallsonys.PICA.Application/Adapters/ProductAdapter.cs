@@ -22,7 +22,11 @@ namespace Kallsonys.PICA.Application.Adapters
                     {
                         cfg.CreateMap<Product, Producto>()
                         .ForMember(orgin => orgin.IdentificadorProducto, destination => destination.MapFrom(m => m.Code))
-                        .ForMember(orgin => orgin.IdProducto, destination => destination.MapFrom(m => m.Id));
+                        .ForMember(orgin => orgin.IdProducto, destination => destination.MapFrom(m => m.Id))
+                        .ForMember(orgin => orgin.Nombre, destination => destination.MapFrom(m => m.Name))
+                        .ForMember(orgin => orgin.Descripcion, destination => destination.MapFrom(m => m.Description))
+                        .ForMember(orgin => orgin.IdCategoria, destination => destination.MapFrom(m => m.IdCategoria))
+                        .ForMember(orgin => orgin.PrecioDeLista, destination => destination.MapFrom(m => m.ListPrice));
                     }
                 );
 
