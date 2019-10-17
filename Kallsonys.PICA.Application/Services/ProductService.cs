@@ -1,12 +1,17 @@
-﻿using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
+﻿using Kallsonys.PICA.Application.DTO.ProductDTO;
+using Kallsonys.PICA.Application.Adapters;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.CrossCutting.Configuration.Messages;
+using Kallsonys.PICA.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.Drawing;
+using System.Configuration;
 
 namespace Kallsonys.PICA.Application.Services
 {
@@ -26,93 +31,52 @@ namespace Kallsonys.PICA.Application.Services
         /// <returns></returns>
         public async Task<Boolean> CreateAsync(Product register, CancellationTokenSource token)
         {
-            var result = await Repository.CreateAsync(new Domain.Entities.Producto(), token);
+            string baseURL = ConfigurationManager.AppSettings["StorageImages"];
+
+            var directory = $"{baseURL}{register.Code}";
+            if (Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            foreach (var item in register.Images)
+            {
+                using (MemoryStream mStream = new MemoryStream(item.Image))
+                {
+                    Image _image = Image.FromStream(mStream);
+                    var urlImage = $"{directory}//{item.Name}";
+                    _image.Save(urlImage);
+                    item.Url = urlImage;
+                }
+            }
+
+            Producto newProduct = register.AdapterProduct();
+            var result = await Repository.CreateAsync(newProduct, token);
             return result.IdProducto > 0;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task<object> GetByCodeAsync(Decimal code, CancellationTokenSource token)
+        public async Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
         {
             var listProducts = await Repository.GetByExpressionAsync(x => x.IdentificadorProducto == code, token);
-            return listProducts.ToList();
+            return listProducts.AdapterProduct().ToList();
         }
 
-        public Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
-        {
-            throw new NotImplementedException();
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task<object> GetByCriteriaAsync(string criteria, CancellationTokenSource token)
+        public async Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token)
         {
             var listProducts = await Repository.GetByExpressionAsync(x => x.Nombre.ToUpper().Contains(criteria.ToUpper()) || x.Descripcion.ToUpper().Contains(criteria.ToUpper()), token);
-            return listProducts.ToList();
+            return listProducts.AdapterProduct().ToList();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task<MultipleProductIdGet> GetByIdAsync(int id, CancellationTokenSource token)
+        public async Task<Product> GetByIdAsync(int id, CancellationTokenSource token)
         {
-            MultipleProductIdGet result = new MultipleProductIdGet();
             var register = await Repository.GetByKeyAsync(id, token);
 
-            if (register == null)
-            {
-                result.Product = null;
-                result.Error = new Error()
-                {
-                    Code = Convert.ToInt32(MessagesApplication_Product.NotFoundCode),
-                    Description = String.Format(MessagesApplication_Product.NotFoundMessage, id)
-                };
-            }
-            else
-            {
-               // result.Product = register.Adpater();
-                result.Error = null;
-            }
-
-            return result;
+            return register.AdapterProduct();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="topFive"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task<object> GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
+        public async Task<IList<Product>> GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
         {
             var listProducts = await Repository.GetByExpressionAsync(x => topFive.Contains(x.IdProducto), token);
-            return listProducts.ToList();
-        }
-
-        Task<IList<Product>> IProductService.GetByCriteriaAsync(string criteria, CancellationTokenSource token)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Product> IProductService.GetByIdAsync(int id, CancellationTokenSource token)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IList<Product>> IProductService.GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
-        {
-            throw new NotImplementedException();
+            return listProducts.AdapterProduct().ToList();
         }
     }
 }

@@ -7,8 +7,12 @@ services:
   kallsonys.pica.apioffers:
     ports:
       - "80"
+  kallsonys.pica.apiimages:
+    ports:
+      - "80"
 networks:
   default:
     external:
       name: nat
+
 

@@ -2,6 +2,7 @@ using Kallsonys.PICA.ApiProducts.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace Kallsonys.PICA.ApiProducts
@@ -24,6 +25,8 @@ namespace Kallsonys.PICA.ApiProducts
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }

@@ -27,13 +27,13 @@ namespace Kallsonys.PICA.Infraestructure.Base
         /// <summary> Creates the asynchronous. </summary>
         /// <param name="entity"> The entity. </param>
         /// <returns></returns>
-        public virtual Task<TEntity> CreateAsync(TEntity entity, CancellationTokenSource cancellationToken)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationTokenSource cancellationToken)
         {
             try
             {
                 DbSet.Add(entity);
-                context.SaveChangesAsync();
-                return Task.FromResult(entity);
+                await context.SaveChangesAsync();
+                return entity;
             }
             catch (Exception exc)
             {

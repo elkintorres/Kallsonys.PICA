@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
+namespace Kallsonys.PICA.Application.DTO.ProductDTO
 {
     /// <summary>
     /// Multiple Response Types Ipbool, Error

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
+namespace Kallsonys.PICA.Application.DTO.ProductDTO
 {
     public partial class Product
     {
@@ -36,7 +36,7 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct.Models
         public int IdCategoria { get; set; }
 
         [Required]
-        public IList<string> ImagesURL { get; set; }
+        public IList<Images> Images { get; set; }
 
         [Required]
         public int IdProducer { get; set; }

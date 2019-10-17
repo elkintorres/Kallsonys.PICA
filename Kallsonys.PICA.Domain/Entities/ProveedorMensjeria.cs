@@ -7,12 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class ProveedorMensjeria
+namespace Kallsonys.PICA.Domain.Entities
 {
-    public int IProveedorMensajeria { get; set; }
-    public string Nombre { get; set; }
-    public bool Habilitado { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class ProveedorMensjeria
+    {
+        public int IProveedorMensajeria { get; set; }
+        public string Nombre { get; set; }
+        public bool Habilitado { get; set; }
+    }
 }

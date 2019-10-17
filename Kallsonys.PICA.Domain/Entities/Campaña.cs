@@ -7,18 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Campaña
+namespace Kallsonys.PICA.Domain.Entities
 {
-    public int IdCamapaña { get; set; }
-    public string Nombre { get; set; }
-    public System.DateTime FechaIncio { get; set; }
-    public System.DateTime FechaFin { get; set; }
-    public string Descripcion { get; set; }
-    public decimal Descuento { get; set; }
-    public int IdProducto { get; set; }
-
-    public virtual Producto Producto { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Campaña
+    {
+        public int IdCamapaña { get; set; }
+        public string Nombre { get; set; }
+        public System.DateTime FechaIncio { get; set; }
+        public System.DateTime FechaFin { get; set; }
+        public string Descripcion { get; set; }
+        public decimal Descuento { get; set; }
+        public int IdProducto { get; set; }
+    
+        public virtual Producto Producto { get; set; }
+    }
 }

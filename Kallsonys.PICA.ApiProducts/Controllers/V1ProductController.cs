@@ -1,6 +1,6 @@
 // Template: Controller Implementation (ApiControllerImplementation.t4) version 3.0
 
-using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
+using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Application.IServices;
 using System;
 using System.Collections.Generic;
@@ -10,23 +10,29 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Kallsonys.PICA.ApiProducts.ApiProduct
 {
-    public partial class v1ProductController : Iv1ProductController
+
+    [RoutePrefix("v1/Product")]
+    public partial class V1ProductController : ApiController
     {
+
         private readonly IProductService Service;
-        public v1ProductController(IProductService service)
+        public V1ProductController(IProductService service)
         {
             this.Service = service;
         }
-
         /// <summary>
         /// Recurso para la creacion de productos - /Product
         /// </summary>
         /// <param name="product"></param>
         /// <returns>MultipleProductPost</returns>
-        public async Task<IHttpActionResult> Post(Models.Product product)
+        [ResponseType(typeof(MultipleProductPost))]
+        [HttpPost]
+        [Route("")]
+        public virtual async Task<IHttpActionResult> PostBase(Product product)
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var result = await this.Service.CreateAsync(product, token);
@@ -43,7 +49,10 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct
         /// </summary>
         /// <param name="id"></param>
         /// <returns>MultipleProductIdGet</returns>
-        public async Task<IHttpActionResult> Get([FromUri] int id)
+        [ResponseType(typeof(MultipleProductIdGet))]
+        [HttpGet]
+        [Route("id")]
+        public virtual async Task<IHttpActionResult> GetBase([FromUri] int id)
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var result = await this.Service.GetByIdAsync(id, token);
@@ -60,7 +69,10 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns>MultipleProductByCriteriaGet</returns>
-        public async Task<IHttpActionResult> GetByCriteria([FromUri] string criteria)
+        [ResponseType(typeof(MultipleProductByCriteriaGet))]
+        [HttpGet]
+        [Route("byCriteria")]
+        public virtual async Task<IHttpActionResult> GetByCriteriaBase([FromUri] string criteria)
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var result = await this.Service.GetByCriteriaAsync(criteria, token);
@@ -77,7 +89,10 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct
         /// </summary>
         /// <param name="topfiveproducts"></param>
         /// <returns>MultipleProductTopFiveGet</returns>
-        public async Task<IHttpActionResult> GetTopFive([FromUri] IList<string> topfiveproducts)
+        [ResponseType(typeof(MultipleProductTopFiveGet))]
+        [HttpGet]
+        [Route("topFive")]
+        public virtual async Task<IHttpActionResult> GetTopFiveBase([FromUri] IList<string> topfiveproducts)
         {
             CancellationTokenSource token = new CancellationTokenSource();
             IList<Int32> topFive = topfiveproducts.Select(x => Convert.ToInt32(x)).ToList();
@@ -89,6 +104,5 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct
             };
             return Ok(response);
         }
-
     }
 }

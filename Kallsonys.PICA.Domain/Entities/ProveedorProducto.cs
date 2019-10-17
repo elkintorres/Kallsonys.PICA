@@ -7,15 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class ProveedorProducto
+namespace Kallsonys.PICA.Domain.Entities
 {
-    public int IdProveedorProducto { get; set; }
-    public string Nombre { get; set; }
-    public bool Habilitado { get; set; }
-    public Nullable<int> IdProducto { get; set; }
-
-    public virtual Producto Producto { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class ProveedorProducto
+    {
+        public int IdProveedorProducto { get; set; }
+        public string Nombre { get; set; }
+        public bool Habilitado { get; set; }
+        public Nullable<int> IdProducto { get; set; }
+    
+        public virtual Producto Producto { get; set; }
+    }
 }

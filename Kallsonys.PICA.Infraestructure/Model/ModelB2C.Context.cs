@@ -28,10 +28,10 @@ namespace Kallsonys.PICA.Infraestructure.Model
     
         public virtual DbSet<Campaña> Campaña { get; set; }
         public virtual DbSet<Categoria> Categoria { get; set; }
-        public virtual DbSet<Imagenes> Imagenes { get; set; }
-        public virtual DbSet<Producto> Producto { get; set; }
         public virtual DbSet<Productor> Productor { get; set; }
         public virtual DbSet<ProveedorMensjeria> ProveedorMensjeria { get; set; }
         public virtual DbSet<ProveedorProducto> ProveedorProducto { get; set; }
+        public virtual DbSet<Producto> Producto { get; set; }
+        public virtual DbSet<Imagenes> Imagenes { get; set; }
     }
 }

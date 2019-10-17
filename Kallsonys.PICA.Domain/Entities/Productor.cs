@@ -7,20 +7,23 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Productor
+namespace Kallsonys.PICA.Domain.Entities
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public Productor()
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Productor
     {
-        this.Producto = new HashSet<Producto>();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Productor()
+        {
+            this.Producto = new HashSet<Producto>();
+        }
+    
+        public int IdProductor { get; set; }
+        public string Nombre { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Producto> Producto { get; set; }
     }
-
-    public int IdProductor { get; set; }
-    public string Nombre { get; set; }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<Producto> Producto { get; set; }
 }

@@ -45,7 +45,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -61,8 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\ImageAdapter.cs" />
     <Compile Include="Adapters\ProductAdapter.cs" />
     <Compile Include="DTO\ProductDTO\ErrorV1.cs" />
+    <Compile Include="DTO\ProductDTO\ImagesV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGetV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductIdGetV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductPostV1.cs" />

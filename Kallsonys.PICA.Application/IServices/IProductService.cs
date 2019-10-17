@@ -1,4 +1,4 @@
-﻿using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
+﻿using Kallsonys.PICA.Application.DTO.ProductDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

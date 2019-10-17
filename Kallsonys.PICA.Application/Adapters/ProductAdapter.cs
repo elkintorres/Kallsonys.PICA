@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Kallsonys.PICA.ApiProducts.ApiProduct.Models;
+using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +26,7 @@ namespace Kallsonys.PICA.Application.Adapters
                         .ForMember(orgin => orgin.Nombre, destination => destination.MapFrom(m => m.Name))
                         .ForMember(orgin => orgin.Descripcion, destination => destination.MapFrom(m => m.Description))
                         .ForMember(orgin => orgin.IdCategoria, destination => destination.MapFrom(m => m.IdCategoria))
+                        .ForMember(orgin => orgin.IdProductor, destination => destination.MapFrom(m => m.IdProducer))
                         .ForMember(orgin => orgin.PrecioDeLista, destination => destination.MapFrom(m => m.ListPrice));
                     }
                 );
@@ -46,7 +47,13 @@ namespace Kallsonys.PICA.Application.Adapters
                     cfg =>
                     {
                         cfg.CreateMap<Producto, Product>()
-                        .ForMember(orgin => orgin.Code, destination => destination.MapFrom(m => m.IdentificadorProducto));
+                        .ForMember(orgin => orgin.Code, destination => destination.MapFrom(m => m.IdentificadorProducto))
+                        .ForMember(orgin => orgin.Id, destination => destination.MapFrom(m => m.IdProducto))
+                        .ForMember(orgin => orgin.Name, destination => destination.MapFrom(m => m.Nombre))
+                        .ForMember(orgin => orgin.Description, destination => destination.MapFrom(m => m.Descripcion))
+                        .ForMember(orgin => orgin.IdCategoria, destination => destination.MapFrom(m => m.IdCategoria))
+                        .ForMember(orgin => orgin.IdProducer, destination => destination.MapFrom(m => m.IdProductor))
+                        .ForMember(orgin => orgin.ListPrice, destination => destination.MapFrom(m => m.PrecioDeLista));
                     }
                 );
 

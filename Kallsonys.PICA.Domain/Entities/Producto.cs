@@ -7,34 +7,36 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Producto
+namespace Kallsonys.PICA.Domain.Entities
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public Producto()
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Producto
     {
-        this.Campaña = new HashSet<Campaña>();
-        this.Imagenes = new HashSet<Imagenes>();
-        this.ProveedorProducto = new HashSet<ProveedorProducto>();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Producto()
+        {
+            this.Campaña = new HashSet<Campaña>();
+            this.ProveedorProducto = new HashSet<ProveedorProducto>();
+            this.Imagenes = new HashSet<Imagenes>();
+        }
+    
+        public int IdProducto { get; set; }
+        public string IdentificadorProducto { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public int IdCategoria { get; set; }
+        public Nullable<decimal> PrecioDeLista { get; set; }
+        public Nullable<int> IdProductor { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Campaña> Campaña { get; set; }
+        public virtual Categoria Categoria { get; set; }
+        public virtual Productor Productor { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProveedorProducto> ProveedorProducto { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Imagenes> Imagenes { get; set; }
     }
-
-    public int IdProducto { get; set; }
-    public string IdentificadorProducto { get; set; }
-    public string Nombre { get; set; }
-    public string Descripcion { get; set; }
-    public int IdCategoria { get; set; }
-    public Nullable<decimal> PrecioDeLista { get; set; }
-    public Nullable<int> IdProductor { get; set; }
-    public Nullable<int> IdImagen { get; set; }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<Campaña> Campaña { get; set; }
-    public virtual Categoria Categoria { get; set; }
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<Imagenes> Imagenes { get; set; }
-    public virtual Productor Productor { get; set; }
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<ProveedorProducto> ProveedorProducto { get; set; }
 }
