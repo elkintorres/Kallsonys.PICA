@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
 using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kallsonys.PICA.Application.Adapters
 {
     public static class ImageAdapter
     {
-
         public static Imagenes AdapterImage(this Images source)
         {
             var config = new MapperConfiguration
@@ -32,7 +28,7 @@ namespace Kallsonys.PICA.Application.Adapters
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -42,7 +38,7 @@ namespace Kallsonys.PICA.Application.Adapters
                 (
                     cfg =>
                     {
-                        cfg.CreateMap<Imagenes ,Images>()
+                        cfg.CreateMap<Imagenes, Images>()
                         .ForMember(orgin => orgin.Description, destination => destination.MapFrom(m => m.Descripcion))
                         .ForMember(orgin => orgin.IdProduct, destination => destination.MapFrom(m => m.IdProducto))
                         .ForMember(orgin => orgin.IsThumbnail, destination => destination.MapFrom(m => m.EsMiniatura))
@@ -56,7 +52,7 @@ namespace Kallsonys.PICA.Application.Adapters
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>

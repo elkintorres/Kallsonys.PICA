@@ -1,7 +1,4 @@
 using Kallsonys.PICA.ApiProducts.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
 
@@ -14,7 +11,7 @@ namespace Kallsonys.PICA.ApiProducts
             config.Filters.Add(new FilterException());
 
             config.Formatters.Add(new RAML.Api.Core.XmlSerializerFormatter());
-			config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
             // Configuración y servicios de API web
 
             // Rutas de API web

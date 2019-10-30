@@ -5,8 +5,6 @@ using Kallsonys.PICA.Application.IServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -14,16 +12,16 @@ using System.Web.Http.Description;
 
 namespace Kallsonys.PICA.ApiProducts.ApiProduct
 {
-
     [RoutePrefix("v1/Product")]
     public partial class V1ProductController : ApiController
     {
-
         private readonly IProductService Service;
+
         public V1ProductController(IProductService service)
         {
             this.Service = service;
         }
+
         /// <summary>
         /// Recurso para la creacion de productos - /Product
         /// </summary>
@@ -34,6 +32,9 @@ namespace Kallsonys.PICA.ApiProducts.ApiProduct
         [Route("")]
         public virtual async Task<IHttpActionResult> PostBase(Product product)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             CancellationTokenSource token = new CancellationTokenSource();
             var result = await this.Service.CreateAsync(product, token);
             MultipleProductPost response = new MultipleProductPost()

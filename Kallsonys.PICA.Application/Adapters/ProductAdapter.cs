@@ -10,7 +10,7 @@ namespace Kallsonys.PICA.Application.Adapters
     {
         //https://csharp.hotexamples.com/examples/-/MapperConfiguration/-/php-mapperconfiguration-class-examples.html
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace Kallsonys.PICA.Application.Adapters
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace Kallsonys.PICA.Application.Adapters
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>

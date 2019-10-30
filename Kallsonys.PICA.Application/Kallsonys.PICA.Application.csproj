@@ -64,8 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\ImageAdapter.cs" />
+    <Compile Include="Adapters\OfferAdapater.cs" />
     <Compile Include="Adapters\ProductAdapter.cs" />
-    <Compile Include="DTO\ProductDTO\ErrorV1.cs" />
+    <Compile Include="DTO\CommonDTO\ErrorV1.cs" />
+    <Compile Include="DTO\OfferDTO\MultipleOfferGet.cs" />
+    <Compile Include="DTO\OfferDTO\SingleOfferPost.cs" />
+    <Compile Include="DTO\OfferDTO\OfferV1.cs" />
+    <Compile Include="DTO\OfferDTO\SingleOfferById.cs" />
     <Compile Include="DTO\ProductDTO\ImagesV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGetV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductIdGetV1.cs" />

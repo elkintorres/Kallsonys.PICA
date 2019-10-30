@@ -1,26 +1,20 @@
-﻿using SimpleInjector;
-using SimpleInjector.Integration.WebApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Kallsonys.PICA.ContractsRepositories.Base;
-using Kallsonys.PICA.Application.IServices;
+﻿using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.Application.Services;
 using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.Infraestructure.Repositories;
+using SimpleInjector;
+using SimpleInjector.Integration.WebApi;
+using System;
+using System.Reflection;
+using System.Web.Http;
 
 namespace Kallsonys.PICA.Application
 {
     public static class IoC
     {
-        static readonly Container container = new Container();
+        private static readonly Container container = new Container();
 
         private static Container Container => container;
-
 
         public static void RegistrarTipos(HttpConfiguration configuracion)
         {
@@ -33,8 +27,8 @@ namespace Kallsonys.PICA.Application
             RegistrarControllers(configuracion);
             Container.Verify();
 
-           // Container.InterceptWith<MonitoringInterceptor>(serviceType => serviceType.Name.StartsWith("Repository"));
-           // container.RegisterSingleton<MonitoringInterceptor>();
+            // Container.InterceptWith<MonitoringInterceptor>(serviceType => serviceType.Name.StartsWith("Repository"));
+            // container.RegisterSingleton<MonitoringInterceptor>();
         }
 
         private static void RegistrarControllers(HttpConfiguration configuracion)
@@ -66,10 +60,10 @@ namespace Kallsonys.PICA.Application
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="assemblies"></param>
-        private static void RegistrarRepositorios(Assembly[]  assemblies)
+        private static void RegistrarRepositorios(Assembly[] assemblies)
         {
             Container.Register<IProductRepository, ProductRepository>(ScopedLifestyle.Scoped);
             Container.Register<IOfferRepository, OfferRepository>(ScopedLifestyle.Scoped);

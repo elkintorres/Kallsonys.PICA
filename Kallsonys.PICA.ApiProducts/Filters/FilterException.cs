@@ -3,10 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
 
-
 namespace Kallsonys.PICA.ApiProducts.Filters
 {
-    public class FilterException: ExceptionFilterAttribute 
+    public class FilterException : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)
         {

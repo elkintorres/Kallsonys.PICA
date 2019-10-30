@@ -1,15 +1,13 @@
 ﻿using Kallsonys.PICA.ContractsRepositories.Base;
+using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
+using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Kallsonys.PICA.CrossCutting.Configuration;
-using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
-using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 
 namespace Kallsonys.PICA.Infraestructure.Base
 {

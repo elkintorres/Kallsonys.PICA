@@ -1,8 +1,8 @@
+using Kallsonys.PICA.ApiProducts.Areas.HelpPage.ModelDescriptions;
+using Kallsonys.PICA.ApiProducts.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using Kallsonys.PICA.ApiProducts.Areas.HelpPage.ModelDescriptions;
-using Kallsonys.PICA.ApiProducts.Areas.HelpPage.Models;
 
 namespace Kallsonys.PICA.ApiProducts.Areas.HelpPage.Controllers
 {

@@ -1,30 +1,30 @@
-﻿using Kallsonys.PICA.Application.DTO.ProductDTO;
-using Kallsonys.PICA.Application.Adapters;
+﻿using Kallsonys.PICA.Application.Adapters;
+using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
-using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 using Kallsonys.PICA.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
-using System.Drawing;
-using System.Configuration;
 
 namespace Kallsonys.PICA.Application.Services
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository Repository;
+
         public ProductService(IProductRepository repository)
         {
             this.Repository = repository;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="register"></param>
         /// <param name="token"></param>
@@ -58,7 +58,6 @@ namespace Kallsonys.PICA.Application.Services
             var listProducts = await Repository.GetByExpressionAsync(x => x.IdentificadorProducto == code, token);
             return listProducts.AdapterProduct().ToList();
         }
-
 
         public async Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token)
         {

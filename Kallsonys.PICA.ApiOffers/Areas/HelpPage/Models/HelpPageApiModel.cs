@@ -1,8 +1,8 @@
+using Kallsonys.PICA.ApiOffers.Areas.HelpPage.ModelDescriptions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using Kallsonys.PICA.ApiOffers.Areas.HelpPage.ModelDescriptions;
 
 namespace Kallsonys.PICA.ApiOffers.Areas.HelpPage.Models
 {

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kallsonys.PICA.Application.DTO.ProductDTO
 {
@@ -15,6 +11,5 @@ namespace Kallsonys.PICA.Application.DTO.ProductDTO
         public byte[] Image { get; set; }
 
         public int IdProduct { get; set; }
-
     }
 }
