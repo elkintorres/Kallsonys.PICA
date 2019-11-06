@@ -30,7 +30,7 @@ namespace Kallsonys.PICA.Application.DTO.ProductDTO
         [Range(0, int.MaxValue)]
         public int IdCategoria { get; set; }
 
-        [Required]
+        //[Required]
         public IList<Images> Images { get; set; }
 
         [Required]

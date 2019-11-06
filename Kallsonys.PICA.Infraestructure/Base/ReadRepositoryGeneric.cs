@@ -27,6 +27,10 @@ namespace Kallsonys.PICA.Infraestructure.Base
         public ReadRepositoryGeneric(DbContext context)
         {
             this.context = context;
+            this.context.Configuration.LazyLoadingEnabled = false;
+            this.context.Configuration.ProxyCreationEnabled = false;
+            this.context.Configuration.AutoDetectChangesEnabled = false;
+            this.context.Configuration.ValidateOnSaveEnabled = false;
         }
 
         /// <summary> Counts the asynchronous. </summary>
@@ -38,7 +42,7 @@ namespace Kallsonys.PICA.Infraestructure.Base
         {
             try
             {
-                return await DbSet.Where(predicate).CountAsync();
+                return await DbSet.Where(predicate).AsNoTracking().CountAsync();
             }
             catch (Exception exc)
             {
@@ -56,7 +60,7 @@ namespace Kallsonys.PICA.Infraestructure.Base
         {
             try
             {
-                return Task.FromResult<IQueryable<TEntity>>(DbSet);
+                return Task.FromResult<IQueryable<TEntity>>(DbSet.AsNoTracking());
             }
             catch (Exception exc)
             {
@@ -76,7 +80,7 @@ namespace Kallsonys.PICA.Infraestructure.Base
         {
             try
             {
-                return Task.FromResult(DbSet.Where(predicate).AsQueryable());
+                return Task.FromResult(DbSet.Where(predicate).AsNoTracking().AsQueryable());
             }
             catch (Exception exc)
             {
@@ -121,7 +125,7 @@ namespace Kallsonys.PICA.Infraestructure.Base
             try
             {
                 //filtro
-                var query = DbSet.Where(predicate);
+                var query = DbSet.Where(predicate).AsNoTracking();
                 //Ordenamiento
                 query = (ascending ? query.OrderBy(orderByExpression) : query.OrderByDescending(orderByExpression));
                 //Paginado

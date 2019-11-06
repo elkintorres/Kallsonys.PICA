@@ -1,13 +1,88 @@
 ﻿using Kallsonys.PICA.ContractsRepositories;
+using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
+using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 using Kallsonys.PICA.Domain.Entities;
-using Kallsonys.PICA.Infraestructure.Base;
-using Kallsonys.PICA.Infraestructure.Model;
+using RepoDb;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Kallsonys.PICA.Infraestructure.Repositories
 {
-    public class OfferRepository : GenericRepository<Campaña, int>, IOfferRepository
+    public class OfferRepository : IOfferRepository
     {
-        public OfferRepository() : base(new Entities())
-        { }
+        private  string ConnectionString => "data source=localhost;initial catalog=BDB2C;user id=UserB2C;password=AdmonB2C;MultipleActiveResultSets=True;";
+        public Task<int> CountAsync(Expression<Func<Campaña, bool>> predicate, CancellationTokenSource cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Campaña> CreateAsync(Campaña entity, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    var id = await connection.InsertAsync<int>("Campaña", entity);
+                    entity.IdCamapaña = id;
+                }
+                
+                return entity;
+            }
+            catch (Exception exc)
+            {
+                cancellationToken.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorCreateAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public void Delete(Campaña entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQueryable<Campaña>> GetAllAsync(CancellationTokenSource cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQueryable<Campaña>> GetByExpressionAsync(Expression<Func<Campaña, bool>> predicate, CancellationTokenSource cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Campaña> GetByKeyAsync(int key, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    var result = await connection.QueryAsync<Campaña>(c => c.IdCamapaña == key);
+                    return result.FirstOrDefault();
+                }
+            }
+            catch (Exception exc)
+            {
+                cancellationToken.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+
+        }
+
+        public IQueryable<Campaña> GetPagedElements<S>(int pageIndex, int pageCount, Expression<Func<Campaña, S>> orderByExpression, Expression<Func<Campaña, bool>> predicate, bool ascending, IList<string> includes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Campaña> UpdateAsync(Campaña entity, CancellationTokenSource cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

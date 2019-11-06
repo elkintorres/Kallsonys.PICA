@@ -17,8 +17,7 @@ namespace Kallsonys.PICA.Infraestructure.Base
         public GenericRepository(DbContext context) : base(context)
         {
             this.context = context;
-            this.context.Configuration.LazyLoadingEnabled = false;
-            this.context.Configuration.ProxyCreationEnabled = false;
+
         }
 
         /// <summary> Creates the asynchronous. </summary>

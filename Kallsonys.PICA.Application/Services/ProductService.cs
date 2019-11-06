@@ -31,22 +31,22 @@ namespace Kallsonys.PICA.Application.Services
         /// <returns></returns>
         public async Task<Boolean> CreateAsync(Product register, CancellationTokenSource token)
         {
-            string baseURL = ConfigurationManager.AppSettings["StorageImages"];
+            //string baseURL = ConfigurationManager.AppSettings["StorageImages"];
 
-            var directory = $"{baseURL}{register.Code}";
-            if (Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            //var directory = $"{baseURL}{register.Code}";
+            //if (Directory.Exists(directory))
+            //    Directory.CreateDirectory(directory);
 
-            foreach (var item in register.Images)
-            {
-                using (MemoryStream mStream = new MemoryStream(item.Image))
-                {
-                    Image _image = Image.FromStream(mStream);
-                    var urlImage = $"{directory}//{item.Name}";
-                    _image.Save(urlImage);
-                    item.Url = urlImage;
-                }
-            }
+            //foreach (var item in register.Images)
+            //{
+            //    using (MemoryStream mStream = new MemoryStream(item.Image))
+            //    {
+            //        Image _image = Image.FromStream(mStream);
+            //        var urlImage = $"{directory}//{item.Name}";
+            //        _image.Save(urlImage);
+            //        item.Url = urlImage;
+            //    }
+            //}
 
             Producto newProduct = register.AdapterProduct();
             var result = await Repository.CreateAsync(newProduct, token);

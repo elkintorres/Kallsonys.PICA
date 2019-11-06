@@ -2,7 +2,7 @@
 
 namespace Kallsonys.PICA.Application.DTO.OfferDTO
 {
-    public class Offer
+    public partial class Offer
     {
         public int Id { get; set; }
 
