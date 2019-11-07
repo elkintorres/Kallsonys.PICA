@@ -107,12 +107,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kallsonys.PICA.ApiOffers\Kallsonys.PICA.ApiOffers.csproj">
-      <Project>{3BB0C666-6ABB-42AF-87D0-BFB0C89E9D54}</Project>
-      <Name>Kallsonys.PICA.ApiOffers</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

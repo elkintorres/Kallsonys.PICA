@@ -15,7 +15,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 {
     public class OfferRepository : IOfferRepository
     {
-        private  string ConnectionString => "data source=localhost;initial catalog=BDB2C;user id=UserB2C;password=AdmonB2C;MultipleActiveResultSets=True;";
+        protected string ConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["ConectionBDB2C"].ConnectionString;
         public Task<int> CountAsync(Expression<Func<Campaña, bool>> predicate, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();

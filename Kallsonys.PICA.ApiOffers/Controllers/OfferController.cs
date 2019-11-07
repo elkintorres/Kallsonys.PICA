@@ -1,5 +1,9 @@
 ﻿using Kallsonys.PICA.Application.DTO.OfferDTO;
 using Kallsonys.PICA.Application.IServices;
+using Newtonsoft.Json;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,19 +24,23 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         [ResponseType(typeof(SingleOfferPost))]
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> PostBase(Offer offer)
+        public virtual async Task<IHttpActionResult> PostBase(Offer offer)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await Service.CreateAsync(offer, token);
-            SingleOfferPost response = new SingleOfferPost()
+            var register = await Service.CreateAsync(offer, token);
+            SingleOfferPost result = new SingleOfferPost()
             {
                 Error = null,
-                IdOffer = result.Id
+                IdOffer = register.Id
             };
-            return Ok(response);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(result), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+
         }
 
         [ResponseType(typeof(MultipleOfferGet))]
@@ -61,13 +69,16 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         public virtual async Task<IHttpActionResult> GetBase([FromUri] int id)
         {
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await Service.GetByIdAsync(id, token);
-            SingleOfferById response = new SingleOfferById()
+            var register = await Service.GetByIdAsync(id, token);
+            SingleOfferById result = new SingleOfferById()
             {
                 Error = null,
-                Offer = result
+                Offer = register
             };
-            return Ok(response);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(result), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
         }
     }
 }

@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IGenericRepository.cs" />
-    <Compile Include="Base\IReadRepository.cs" />
     <Compile Include="IOfferRepository.cs" />
     <Compile Include="IProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

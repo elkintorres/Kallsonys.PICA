@@ -108,10 +108,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kallsonys.PICA.ApiOffers\Kallsonys.PICA.ApiOffers.csproj">
-      <Project>{3BB0C666-6ABB-42AF-87D0-BFB0C89E9D54}</Project>
-      <Name>Kallsonys.PICA.ApiOffers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Kallsonys.PICA.ApiProducts\Kallsonys.PICA.ApiProducts.csproj">
       <Project>{E853CD50-3C04-4691-80C8-301B378DC209}</Project>
       <Name>Kallsonys.PICA.ApiProducts</Name>
