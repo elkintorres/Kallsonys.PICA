@@ -17,10 +17,12 @@ namespace Kallsonys.PICA.Application.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository Repository;
+        private readonly IImageService ServiceImage;
 
-        public ProductService(IProductRepository repository)
+        public ProductService(IProductRepository repository, IImageService imageService)
         {
             this.Repository = repository;
+            this.ServiceImage = imageService;
         }
 
         /// <summary>
@@ -29,39 +31,28 @@ namespace Kallsonys.PICA.Application.Services
         /// <param name="register"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<Boolean> CreateAsync(Product register, CancellationTokenSource token)
+        public async Task<int> CreateAsync(Product register, CancellationTokenSource token)
         {
-            //string baseURL = ConfigurationManager.AppSettings["StorageImages"];
+            B2CProduct newProduct = register.AdapterProduct();
+            if(register.Images!= null)
+            {
+                IEnumerable<B2CImage> imagesProduct = ServiceImage.SaveMultipleImage(register.Images.ToList(), register.Code);
+                newProduct.B2CImage = imagesProduct.ToList();
+            }
 
-            //var directory = $"{baseURL}{register.Code}";
-            //if (Directory.Exists(directory))
-            //    Directory.CreateDirectory(directory);
-
-            //foreach (var item in register.Images)
-            //{
-            //    using (MemoryStream mStream = new MemoryStream(item.Image))
-            //    {
-            //        Image _image = Image.FromStream(mStream);
-            //        var urlImage = $"{directory}//{item.Name}";
-            //        _image.Save(urlImage);
-            //        item.Url = urlImage;
-            //    }
-            //}
-
-            Producto newProduct = register.AdapterProduct();
             var result = await Repository.CreateAsync(newProduct, token);
-            return result.IdProducto > 0;
+            return result.IdProduct;
         }
 
         public async Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => x.IdentificadorProducto == code, token);
+            var listProducts = await Repository.GetByExpressionAsync(x => x.Code == code, token);
             return listProducts.AdapterProduct().ToList();
         }
 
         public async Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => x.Nombre.ToUpper().Contains(criteria.ToUpper()) || x.Descripcion.ToUpper().Contains(criteria.ToUpper()), token);
+            var listProducts = await Repository.GetByExpressionAsync(x => x.Name.ToUpper().Contains(criteria.ToUpper()) || x.Description.ToUpper().Contains(criteria.ToUpper()), token);
             return listProducts.AdapterProduct().ToList();
         }
 
@@ -74,7 +65,7 @@ namespace Kallsonys.PICA.Application.Services
 
         public async Task<IList<Product>> GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => topFive.Contains(x.IdProducto), token);
+            var listProducts = await Repository.GetByExpressionAsync(x => topFive.Contains(x.IdProduct), token);
             return listProducts.AdapterProduct().ToList();
         }
     }

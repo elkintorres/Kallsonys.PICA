@@ -26,12 +26,11 @@ namespace Kallsonys.PICA.Infraestructure.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Campaña> Campaña { get; set; }
-        public virtual DbSet<Categoria> Categoria { get; set; }
-        public virtual DbSet<Productor> Productor { get; set; }
-        public virtual DbSet<ProveedorMensjeria> ProveedorMensjeria { get; set; }
-        public virtual DbSet<ProveedorProducto> ProveedorProducto { get; set; }
-        public virtual DbSet<Producto> Producto { get; set; }
-        public virtual DbSet<Imagenes> Imagenes { get; set; }
+        public virtual DbSet<B2CCategory> B2CCategory { get; set; }
+        public virtual DbSet<B2CImage> B2CImage { get; set; }
+        public virtual DbSet<B2COffer> B2COffer { get; set; }
+        public virtual DbSet<B2CProducer> B2CProducer { get; set; }
+        public virtual DbSet<B2CProduct> B2CProduct { get; set; }
+        public virtual DbSet<B2CProvider> B2CProvider { get; set; }
     }
 }

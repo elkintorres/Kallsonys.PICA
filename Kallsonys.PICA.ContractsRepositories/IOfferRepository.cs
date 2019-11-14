@@ -3,7 +3,7 @@ using Kallsonys.PICA.Domain.Entities;
 
 namespace Kallsonys.PICA.ContractsRepositories
 {
-    public interface IOfferRepository : IGenericRepository<Campaña, int>
+    public interface IOfferRepository : IGenericRepository<B2COffer, int>
     {
     }
 }

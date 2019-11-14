@@ -31,11 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=4.7.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.4.7.1\lib\net45\SimpleInjector.dll</HintPath>
@@ -77,20 +74,25 @@
     <Compile Include="DTO\OfferDTO\SingleOfferPost.cs" />
     <Compile Include="DTO\OfferDTO\OfferV1.cs" />
     <Compile Include="DTO\OfferDTO\SingleOfferById.cs" />
-    <Compile Include="DTO\ProductDTO\ImagesV1.cs" />
+    <Compile Include="DTO\ImageDTO\ImagesV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGetV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductIdGetV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductPostV1.cs" />
     <Compile Include="DTO\ProductDTO\MultipleProductTopFiveGetV1.cs" />
     <Compile Include="DTO\ProductDTO\ProductV1.cs" />
     <Compile Include="IoC.cs" />
+    <Compile Include="IServices\IImageService.cs" />
     <Compile Include="IServices\IOfferService.cs" />
     <Compile Include="IServices\IProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ImageService.cs" />
     <Compile Include="Services\OfferService.cs" />
     <Compile Include="Services\ProductService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

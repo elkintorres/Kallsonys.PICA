@@ -16,19 +16,19 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
     public class OfferRepository : IOfferRepository
     {
         protected string ConnectionString => System.Configuration.ConfigurationManager.ConnectionStrings["ConectionBDB2C"].ConnectionString;
-        public Task<int> CountAsync(Expression<Func<Campaña, bool>> predicate, CancellationTokenSource cancellationToken)
+        public Task<int> CountAsync(Expression<Func<B2COffer, bool>> predicate, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Campaña> CreateAsync(Campaña entity, CancellationTokenSource cancellationToken)
+        public async Task<B2COffer> CreateAsync(B2COffer entity, CancellationTokenSource cancellationToken)
         {
             try
             {
                 using (var connection = new SqlConnection(ConnectionString))
                 {
-                    var id = await connection.InsertAsync<int>("Campaña", entity);
-                    entity.IdCamapaña = id;
+                    var id = await connection.InsertAsync<int>("B2COffer", entity);
+                    entity.IdOffer = id;
                 }
                 
                 return entity;
@@ -41,28 +41,28 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             }
         }
 
-        public void Delete(Campaña entity)
+        public void Delete(B2COffer entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Campaña>> GetAllAsync(CancellationTokenSource cancellationToken)
+        public Task<IQueryable<B2COffer>> GetAllAsync(CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Campaña>> GetByExpressionAsync(Expression<Func<Campaña, bool>> predicate, CancellationTokenSource cancellationToken)
+        public Task<IQueryable<B2COffer>> GetByExpressionAsync(Expression<Func<B2COffer, bool>> predicate, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Campaña> GetByKeyAsync(int key, CancellationTokenSource cancellationToken)
+        public async Task<B2COffer> GetByKeyAsync(int key, CancellationTokenSource cancellationToken)
         {
             try
             {
                 using (var connection = new SqlConnection(ConnectionString))
                 {
-                    var result = await connection.QueryAsync<Campaña>(c => c.IdCamapaña == key);
+                    var result = await connection.QueryAsync<B2COffer>(c => c.IdOffer == key);
                     return result.FirstOrDefault();
                 }
             }
@@ -75,12 +75,12 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
         }
 
-        public IQueryable<Campaña> GetPagedElements<S>(int pageIndex, int pageCount, Expression<Func<Campaña, S>> orderByExpression, Expression<Func<Campaña, bool>> predicate, bool ascending, IList<string> includes)
+        public IQueryable<B2COffer> GetPagedElements<S>(int pageIndex, int pageCount, Expression<Func<B2COffer, S>> orderByExpression, Expression<Func<B2COffer, bool>> predicate, bool ascending, IList<string> includes)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Campaña> UpdateAsync(Campaña entity, CancellationTokenSource cancellationToken)
+        public Task<B2COffer> UpdateAsync(B2COffer entity, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
         }

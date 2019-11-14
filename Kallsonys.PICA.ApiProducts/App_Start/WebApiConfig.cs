@@ -1,5 +1,6 @@
-using Kallsonys.PICA.ApiProducts.Filters;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 
 namespace Kallsonys.PICA.ApiProducts
@@ -8,10 +9,6 @@ namespace Kallsonys.PICA.ApiProducts
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Filters.Add(new FilterException());
-
-            config.Formatters.Add(new RAML.Api.Core.XmlSerializerFormatter());
-            config.Formatters.Remove(config.Formatters.XmlFormatter);
             // Configuración y servicios de API web
 
             // Rutas de API web
@@ -22,8 +19,6 @@ namespace Kallsonys.PICA.ApiProducts
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }

@@ -20,14 +20,14 @@ namespace Kallsonys.PICA.Application.Services
 
         public async Task<Offer> CreateAsync(Offer offer, CancellationTokenSource token)
         {
-            Campaña newOffer = offer.AdapterOffer();
+            B2COffer newOffer = offer.AdapterOffer();
             var result = await Repository.CreateAsync(newOffer, token);
             return result.AdapterOffer();
         }
 
         public async Task<IEnumerable<Offer>> GetAsync(CancellationTokenSource token)
         {
-            var result = await Repository.GetByExpressionAsync(x => x.FechaFin <= System.DateTime.Now, token);
+            var result = await Repository.GetByExpressionAsync(x => x.EndDate <= System.DateTime.Now, token);
             return result.AdapterOffer();
         }
 

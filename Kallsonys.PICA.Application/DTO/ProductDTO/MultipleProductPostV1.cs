@@ -7,11 +7,11 @@ using Kallsonys.PICA.Application.DTO.CommonDTO;
 namespace Kallsonys.PICA.Application.DTO.ProductDTO
 {
     /// <summary>
-    /// Multiple Response Types Ipbool, Error
+    /// Multiple Response Types IdProduct, Error
     /// </summary>
     public partial class MultipleProductPost
     {
-        public bool Ipbool { get; set; }
+        public int IdProduct { get; set; }
 
         public Error Error { get; set; }
     } // end class

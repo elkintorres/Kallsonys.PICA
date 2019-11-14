@@ -21,7 +21,7 @@ namespace Kallsonys.PICA.Application.DTO.OfferDTO
         public string Description { get; set; }
 
         [Required]
-        public decimal Discount { get; set; }
+        public int Discount { get; set; }
 
         [Required]
         public int IdProduct { get; set; }

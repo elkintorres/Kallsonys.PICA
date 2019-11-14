@@ -5,18 +5,18 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="50a913f8bc1d42dc8afc8f1ee3bd04c6" Name="Diagram1">
-        <EntityTypeShape EntityType="BDB2CModel.Campaña" Width="1.5" PointX="5.25" PointY="6.875" />
-        <EntityTypeShape EntityType="BDB2CModel.Categoria" Width="1.5" PointX="0.75" PointY="4.5" />
-        <EntityTypeShape EntityType="BDB2CModel.Productor" Width="1.5" PointX="0.75" PointY="1.5" />
-        <EntityTypeShape EntityType="BDB2CModel.ProveedorMensjeria" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="BDB2CModel.ProveedorProducto" Width="1.5" PointX="5.25" PointY="1.25" />
-        <EntityTypeShape EntityType="BDB2CModel.Producto" Width="1.5" PointX="3" PointY="2.125" />
-        <AssociationConnector Association="BDB2CModel.FK_Campaña_Producto" />
-        <AssociationConnector Association="BDB2CModel.FK_Producto_Categoria" />
-        <AssociationConnector Association="BDB2CModel.FK_Producto_Productor" />
-        <AssociationConnector Association="BDB2CModel.FK_ProveedorProducto_Producto" />
-        <EntityTypeShape EntityType="BDB2CModel.Imagenes" Width="1.5" PointX="5.25" PointY="10.625" />
-        <AssociationConnector Association="BDB2CModel.FK_Imagenes_Producto" />
+        <EntityTypeShape EntityType="BDB2CModel.B2CCategory" Width="1.5" PointX="0.75" PointY="4" />
+        <EntityTypeShape EntityType="BDB2CModel.B2CImage" Width="1.5" PointX="7.5" PointY="5.125" />
+        <EntityTypeShape EntityType="BDB2CModel.B2COffer" Width="1.5" PointX="5.25" PointY="6.75" />
+        <EntityTypeShape EntityType="BDB2CModel.B2CProducer" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BDB2CModel.B2CProduct" Width="1.5" PointX="3" PointY="3" />
+        <EntityTypeShape EntityType="BDB2CModel.B2CProvider" Width="1.5" PointX="0.75" PointY="7.25" />
+        <AssociationConnector Association="BDB2CModel.FK_Product_Category" />
+        <AssociationConnector Association="BDB2CModel.FK_Image_Offer" />
+        <AssociationConnector Association="BDB2CModel.FK_Image_Product" />
+        <AssociationConnector Association="BDB2CModel.FK_Offer_Product" />
+        <AssociationConnector Association="BDB2CModel.FK_Product_Producer" />
+        <AssociationConnector Association="BDB2CModel.FK_Product_Provider" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

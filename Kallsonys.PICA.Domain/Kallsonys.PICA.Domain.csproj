@@ -41,30 +41,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Campaña.cs">
+    <Compile Include="Entities\B2CCategory.cs">
       <DependentUpon>ModelB2C.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Categoria.cs">
+    <Compile Include="Entities\B2CImage.cs">
       <DependentUpon>ModelB2C.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Imagenes.cs">
+    <Compile Include="Entities\B2COffer.cs">
+      <DependentUpon>ModelB2C.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\B2CProducer.cs">
+      <DependentUpon>ModelB2C.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\B2CProduct.cs">
+      <DependentUpon>ModelB2C.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\B2CProvider.cs">
       <DependentUpon>ModelB2C.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\ModelB2C.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelB2C.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Producto.cs">
-      <DependentUpon>ModelB2C.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Productor.cs">
-      <DependentUpon>ModelB2C.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProveedorMensjeria.cs">
-      <DependentUpon>ModelB2C.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProveedorProducto.cs">
       <DependentUpon>ModelB2C.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

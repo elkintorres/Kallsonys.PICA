@@ -57,6 +57,7 @@ namespace Kallsonys.PICA.Application
         {
             Container.Register<IOfferService, OfferService>(ScopedLifestyle.Scoped);
             Container.Register<IProductService, ProductService>(ScopedLifestyle.Scoped);
+            Container.Register<IImageService, ImageService>(ScopedLifestyle.Scoped);
         }
 
         /// <summary>
