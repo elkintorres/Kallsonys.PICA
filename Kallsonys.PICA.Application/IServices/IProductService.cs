@@ -12,7 +12,7 @@ namespace Kallsonys.PICA.Application.IServices
 
         Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token);
 
-        Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token);
+        Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageCount, CancellationTokenSource token);
 
         Task<IList<Product>> GetTopFiveAsync(IList<Int32> topFive, CancellationTokenSource token);
 

@@ -43,10 +43,10 @@
   <ItemGroup>
     <Compile Include="Exceptions\InfraestructureExcepcion.cs" />
     <Compile Include="Exceptions\KallsonysException.cs" />
-    <Compile Include="Messages\MessagesApplication.Product.Designer.cs">
+    <Compile Include="Messages\MessagesApplication.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MessagesApplication.Product.resx</DependentUpon>
+      <DependentUpon>MessagesApplication.resx</DependentUpon>
     </Compile>
     <Compile Include="Messages\MessagesInfraestructure.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -56,9 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Messages\MessagesApplication.Product.resx">
+    <EmbeddedResource Include="Messages\MessagesApplication.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>MessagesApplication.Product.Designer.cs</LastGenOutput>
+      <LastGenOutput>MessagesApplication.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Messages\MessagesInfraestructure.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

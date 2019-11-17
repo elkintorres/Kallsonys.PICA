@@ -61,6 +61,15 @@ namespace Kallsonys.PICA.CrossCutting.Configuration.Messages {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Se ha producido un error al realzar la transacción en la BD.
+        /// </summary>
+        public static string ErrorBD {
+            get {
+                return ResourceManager.GetString("ErrorBD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a .
         /// </summary>
         public static string ErrorConsultAsync {

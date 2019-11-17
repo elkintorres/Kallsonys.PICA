@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\OfferController.cs" />
+    <Compile Include="Filters\OfferFilterException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -117,6 +118,10 @@
     <ProjectReference Include="..\Kallsonys.PICA.Application\Kallsonys.PICA.Application.csproj">
       <Project>{3C36E9D8-C7CD-463E-BD89-22132E69FCFA}</Project>
       <Name>Kallsonys.PICA.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kallsonys.PICA.CrossCutting.Configuration\Kallsonys.PICA.CrossCutting.Configuration.csproj">
+      <Project>{CF2F145C-7F7E-4532-9DB2-57596EB70F10}</Project>
+      <Name>Kallsonys.PICA.CrossCutting.Configuration</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

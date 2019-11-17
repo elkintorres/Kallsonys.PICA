@@ -1,8 +1,12 @@
 ﻿using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Application.IServices;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -13,7 +17,6 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
     [RoutePrefix("v1/Product")]
     public class ProductController : ApiController
     {
-
         private readonly IProductService Service;
 
         public ProductController(IProductService service)
@@ -26,7 +29,7 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         /// </summary>
         /// <param name="product"></param>
         /// <returns>MultipleProductPost</returns>
-        [ResponseType(typeof(MultipleProductPost))]
+        [ResponseType(typeof(Int32))]
         [HttpPost]
         [Route("")]
         public virtual async Task<IHttpActionResult> PostBase(Product product)
@@ -35,13 +38,11 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
                 return BadRequest(ModelState);
 
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await this.Service.CreateAsync(product, token);
-            MultipleProductPost response = new MultipleProductPost()
-            {
-                Error = null,
-                IdProduct = result
-            };
-            return Ok(response);
+            var register = await Service.CreateAsync(product, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
         }
 
         /// <summary>
@@ -49,19 +50,17 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>MultipleProductIdGet</returns>
-        [ResponseType(typeof(MultipleProductIdGet))]
+        [ResponseType(typeof(Product))]
         [HttpGet]
         [Route("id")]
         public virtual async Task<IHttpActionResult> GetBase([FromUri] int id)
         {
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await this.Service.GetByIdAsync(id, token);
-            MultipleProductIdGet response = new MultipleProductIdGet()
-            {
-                Error = null,
-                Product = result
-            };
-            return Ok(response);
+            var register = await Service.GetByIdAsync(id, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
         }
 
         /// <summary>
@@ -69,19 +68,18 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns>MultipleProductByCriteriaGet</returns>
-        [ResponseType(typeof(MultipleProductByCriteriaGet))]
+        [ResponseType(typeof(IList<Product>))]
         [HttpGet]
         [Route("byCriteria")]
-        public virtual async Task<IHttpActionResult> GetByCriteriaBase([FromUri] string criteria)
+        public virtual async Task<IHttpActionResult> GetByCriteriaBase([FromUri] string criteria, int pageCount = 10)
         {
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await this.Service.GetByCriteriaAsync(criteria, token);
-            MultipleProductByCriteriaGet response = new MultipleProductByCriteriaGet()
-            {
-                Error = null,
-                Product = result
-            };
-            return Ok(response);
+            var register = await Service.GetByCriteriaAsync(criteria, pageCount, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+
         }
 
         /// <summary>
@@ -89,20 +87,20 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         /// </summary>
         /// <param name="topfiveproducts"></param>
         /// <returns>MultipleProductTopFiveGet</returns>
-        [ResponseType(typeof(MultipleProductTopFiveGet))]
+        [ResponseType(typeof(IList<Product>))]
         [HttpGet]
         [Route("topFive")]
-        public virtual async Task<IHttpActionResult> GetTopFiveBase([FromUri] IList<string> topfiveproducts)
+        public virtual async Task<IHttpActionResult> GetTopFiveBase([FromUri] IList<Int32> topfiveproducts)
         {
+            if (topfiveproducts.Count() > 5)
+                return BadRequest("Cantidad máxima de consulta es 5 productos ");
+
             CancellationTokenSource token = new CancellationTokenSource();
-            IList<Int32> topFive = topfiveproducts.Select(x => Convert.ToInt32(x)).ToList();
-            var result = await this.Service.GetTopFiveAsync(topFive, token);
-            MultipleProductTopFiveGet response = new MultipleProductTopFiveGet()
-            {
-                Error = null,
-                Product = result
-            };
-            return Ok(response);
+            var register = await Service.GetTopFiveAsync(topfiveproducts, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
         }
 
     }

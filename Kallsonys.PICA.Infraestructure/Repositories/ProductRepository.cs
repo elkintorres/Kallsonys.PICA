@@ -25,7 +25,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
         {
             try
             {
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
                     var id = await connection.InsertAsync<int>("B2CProduct", entity);
                     entity.IdProduct = id;
@@ -51,18 +51,49 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predicate, CancellationTokenSource cancellationToken)
+        public async Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predicate, CancellationTokenSource cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.QueryAsync<B2CProduct>(predicate,  hints: "WITH (NOLOCK)");
+                    return result.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                cancellationToken.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public async Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predicate, int pageCount, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.QueryAsync<B2CProduct>(predicate, top: pageCount, hints: "WITH (NOLOCK)");
+                    return result.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                cancellationToken.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
         }
 
         public async Task<B2CProduct> GetByKeyAsync(int key, CancellationTokenSource cancellationToken)
         {
             try
             {
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.QueryAsync<B2CProduct>(c => c.IdProduct == key);
+                    var result = await connection.QueryAsync<B2CProduct>(c => c.IdProduct == key, hints: "WITH (NOLOCK)");
                     return result.FirstOrDefault();
                 }
             }

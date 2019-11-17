@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Kallsonys.PICA.ApiOffers.Filters;
 using System.Web.Http;
 
 namespace Kallsonys.PICA.ApiOffers
@@ -9,6 +7,7 @@ namespace Kallsonys.PICA.ApiOffers
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Filters.Add(new OfferFilterException());
             // Configuración y servicios de API web
 
             // Rutas de API web

@@ -70,15 +70,8 @@
     <Compile Include="Adapters\OfferAdapater.cs" />
     <Compile Include="Adapters\ProductAdapter.cs" />
     <Compile Include="DTO\CommonDTO\ErrorV1.cs" />
-    <Compile Include="DTO\OfferDTO\MultipleOfferGet.cs" />
-    <Compile Include="DTO\OfferDTO\SingleOfferPost.cs" />
     <Compile Include="DTO\OfferDTO\OfferV1.cs" />
-    <Compile Include="DTO\OfferDTO\SingleOfferById.cs" />
     <Compile Include="DTO\ImageDTO\ImagesV1.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductByCriteriaGetV1.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductIdGetV1.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductPostV1.cs" />
-    <Compile Include="DTO\ProductDTO\MultipleProductTopFiveGetV1.cs" />
     <Compile Include="DTO\ProductDTO\ProductV1.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="IServices\IImageService.cs" />

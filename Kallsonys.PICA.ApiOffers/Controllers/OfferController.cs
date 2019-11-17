@@ -1,6 +1,8 @@
 ﻿using Kallsonys.PICA.Application.DTO.OfferDTO;
 using Kallsonys.PICA.Application.IServices;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -21,7 +23,7 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
             this.Service = service;
         }
 
-        [ResponseType(typeof(SingleOfferPost))]
+        [ResponseType(typeof(Int32))]
         [HttpPost]
         [Route("")]
         public virtual async Task<IHttpActionResult> PostBase(Offer offer)
@@ -31,31 +33,23 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
 
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.CreateAsync(offer, token);
-            SingleOfferPost result = new SingleOfferPost()
-            {
-                Error = null,
-                IdOffer = register.Id
-            };
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            response.Content = new StringContent(JsonConvert.SerializeObject(result), Encoding.UTF8, "application/json");
+            response.Content = new StringContent(JsonConvert.SerializeObject(register.Id), Encoding.UTF8, "application/json");
             return ResponseMessage(response);
-
         }
 
-        [ResponseType(typeof(MultipleOfferGet))]
+        [ResponseType(typeof(IList<Offer>))]
         [HttpGet]
         [Route("")]
         public virtual async Task<IHttpActionResult> Get()
         {
             CancellationTokenSource token = new CancellationTokenSource();
-            var result = await Service.GetAsync(token);
-            MultipleOfferGet response = new MultipleOfferGet()
-            {
-                Error = null,
-                Offers = result
-            };
-            return Ok(response);
+            var registers = await Service.GetAsync(token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(registers), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
         }
 
         /// <summary>
@@ -63,21 +57,16 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ResponseType(typeof(SingleOfferById))]
+        [ResponseType(typeof(Offer))]
         [HttpGet]
         [Route("id")]
         public virtual async Task<IHttpActionResult> GetBase([FromUri] int id)
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.GetByIdAsync(id, token);
-            SingleOfferById result = new SingleOfferById()
-            {
-                Error = null,
-                Offer = register
-            };
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            response.Content = new StringContent(JsonConvert.SerializeObject(result), Encoding.UTF8, "application/json");
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
             return ResponseMessage(response);
         }
     }

@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace Kallsonys.PICA.Application.Services
         public async Task<int> CreateAsync(Product register, CancellationTokenSource token)
         {
             B2CProduct newProduct = register.AdapterProduct();
-            if(register.Images!= null)
+            if (register.Images != null)
             {
                 IEnumerable<B2CImage> imagesProduct = ServiceImage.SaveMultipleImage(register.Images.ToList(), register.Code);
                 newProduct.B2CImage = imagesProduct.ToList();
@@ -50,9 +51,24 @@ namespace Kallsonys.PICA.Application.Services
             return listProducts.AdapterProduct().ToList();
         }
 
-        public async Task<IList<Product>> GetByCriteriaAsync(string criteria, CancellationTokenSource token)
+        public async Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageCount, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => x.Name.ToUpper().Contains(criteria.ToUpper()) || x.Description.ToUpper().Contains(criteria.ToUpper()), token);
+            var criteriaSql = criteria.Replace("*","");
+            Expression<Func<B2CProduct, bool>> predecate = null;
+            if (criteria.StartsWith("*"))
+            {
+                predecate = (x => x.Name.EndsWith(criteriaSql) || x.Description.EndsWith(criteriaSql));
+            }
+            else if (criteria.EndsWith("*"))
+            {
+                predecate = (x => x.Name.StartsWith(criteriaSql) || x.Description.StartsWith(criteriaSql));
+            }
+            else
+            {
+                predecate = (x => x.Name.Contains(criteriaSql) || x.Description.Contains(criteriaSql));
+            }
+
+            var listProducts = await Repository.GetByExpressionAsync(predecate, pageCount, token);
             return listProducts.AdapterProduct().ToList();
         }
 
