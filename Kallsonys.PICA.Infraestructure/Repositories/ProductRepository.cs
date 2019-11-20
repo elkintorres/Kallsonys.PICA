@@ -57,8 +57,38 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.QueryAsync<B2CProduct>(predicate,  hints: "WITH (NOLOCK)");
+
+
+
+                    var result = await connection.QueryAsync<B2CProduct>(predicate, hints: "WITH (NOLOCK)");
                     return result.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                cancellationToken.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public async Task<IQueryable<B2CProduct>> GetByCodeAsync(string code, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+
+                    // Get the parent customer, and the child objects
+                    var result = await connection.QueryMultipleAsync<B2CProduct, B2CImage>(
+                        product => product.Code == code,
+                        image => image.B2CProduct.Code == code);
+
+                    foreach (var product in result.Item1)
+                    {
+                        product.B2CImage = result.Item2.Where(x => x.IdProduct == product.IdProduct).ToList();
+                    }
+                    return result.Item1.AsQueryable();
                 }
             }
             catch (Exception exc)
@@ -113,6 +143,34 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
         public Task<B2CProduct> UpdateAsync(B2CProduct entity, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IQueryable<B2CProduct>> GetAllAsync(int pageCount, int pageIndex, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+
+                    var commandText = "select top (@pageCount) * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK)) as x where rn between @pageIndex and @pageIndex + @pageCount";
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("pageCount", pageCount),
+                        new QueryField("pageIndex", pageIndex)
+                    });
+
+                    // Execute the SQL
+                    var result = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
+
+                    return result.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
         }
     }
 }

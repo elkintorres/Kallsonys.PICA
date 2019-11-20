@@ -43,7 +43,15 @@ namespace Kallsonys.PICA.Application.Adapters
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<Image> AdapterProduct(this IQueryable<B2CImage> source)
+        public static IEnumerable<Image> AdapterImage(this IQueryable<B2CImage> source)
+        {
+            foreach (var item in source)
+            {
+                yield return item.AdapterImage();
+            }
+        }
+
+        public static IEnumerable<B2CImage> AdapterImage(this IQueryable<Image> source)
         {
             foreach (var item in source)
             {

@@ -45,15 +45,21 @@ namespace Kallsonys.PICA.Application.Services
             return result.IdProduct;
         }
 
+        public async Task<IList<Product>> GetByAll(int pageCount, int pageIndex, CancellationTokenSource token)
+        {
+            var listProducts = await Repository.GetAllAsync(pageCount, pageIndex, token);
+            return listProducts.AdapterProduct().ToList();
+        }
+
         public async Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => x.Code == code, token);
+            var listProducts = await Repository.GetByCodeAsync(code, token);
             return listProducts.AdapterProduct().ToList();
         }
 
         public async Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageCount, CancellationTokenSource token)
         {
-            var criteriaSql = criteria.Replace("*","");
+            var criteriaSql = criteria.Replace("*", "");
             Expression<Func<B2CProduct, bool>> predecate = null;
             if (criteria.StartsWith("*"))
             {

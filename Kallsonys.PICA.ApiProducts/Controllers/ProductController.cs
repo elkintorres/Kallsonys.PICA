@@ -45,6 +45,19 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
             return ResponseMessage(response);
         }
 
+        [ResponseType(typeof(Product))]
+        [HttpGet]
+        [Route("GetAll")]
+        public virtual async Task<IHttpActionResult> GetAll([FromUri] int PageCount = 10, int PageIndex = 0)
+        {
+            CancellationTokenSource token = new CancellationTokenSource();
+            var register = await Service.GetByAll(PageCount, PageIndex, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
+
         /// <summary>
         /// Recurso para la consulta de un producto por id - /id
         /// </summary>

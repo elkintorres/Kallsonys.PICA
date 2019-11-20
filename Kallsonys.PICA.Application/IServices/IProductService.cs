@@ -17,5 +17,7 @@ namespace Kallsonys.PICA.Application.IServices
         Task<IList<Product>> GetTopFiveAsync(IList<Int32> topFive, CancellationTokenSource token);
 
         Task<int> CreateAsync(Product register, CancellationTokenSource token);
+
+        Task<IList<Product>>GetByAll(int pageCount, int pageIndex, CancellationTokenSource token);
     }
 }
