@@ -51,7 +51,7 @@ namespace Kallsonys.PICA.Application.Adapters
             }
         }
 
-        public static IEnumerable<B2CImage> AdapterImage(this IQueryable<Image> source)
+        public static IEnumerable<B2CImage> AdapterImage(this IEnumerable<Image> source)
         {
             foreach (var item in source)
             {

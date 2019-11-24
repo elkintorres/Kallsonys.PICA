@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -10,8 +11,10 @@ namespace Kallsonys.PICA.ContractsRepositories
 {
     public interface IProductRepository : IGenericRepository<B2CProduct, int>
     {
-        Task<IQueryable<B2CProduct>> GetByCodeAsync(string code, CancellationTokenSource cancellationToken);
-        Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predecate, int pageCount, CancellationTokenSource token);
-        Task<IQueryable<B2CProduct>> GetAllAsync(int pageCount, int pageIndex, CancellationTokenSource token);
+        Task<IQueryable<B2CProduct>> GetByCodeAsync(string code, int pageSize, int pageIndex, CancellationTokenSource cancellationToken);
+        Task<IQueryable<B2CProduct>> GetAllAsync(int pageSize, int pageIndex, CancellationTokenSource token);
+        Task<IQueryable<B2CProduct>> GetByCriteria(string criteria, int pageSize, int pageIndex, CancellationTokenSource token);
+        Task<IQueryable<B2CProduct>> GetAllByIdsAsync(IList<int> ids, CancellationTokenSource token);
+        Task<Int32> GetCountAll(CancellationTokenSource token);
     }
 }

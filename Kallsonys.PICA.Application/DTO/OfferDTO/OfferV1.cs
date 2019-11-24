@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Kallsonys.PICA.Application.DTO.ImageDTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kallsonys.PICA.Application.DTO.OfferDTO
 {
@@ -25,5 +26,7 @@ namespace Kallsonys.PICA.Application.DTO.OfferDTO
 
         [Required]
         public int IdProduct { get; set; }
+
+        public Image Image { get; set; }
     }
 }

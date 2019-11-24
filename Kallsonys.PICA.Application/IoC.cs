@@ -68,6 +68,7 @@ namespace Kallsonys.PICA.Application
         {
             Container.Register<IProductRepository, ProductRepository>(ScopedLifestyle.Scoped);
             Container.Register<IOfferRepository, OfferRepository>(ScopedLifestyle.Scoped);
+            Container.Register<IImageRepository, ImageRepository>(ScopedLifestyle.Scoped);
         }
     }
 }

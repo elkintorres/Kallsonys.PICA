@@ -26,7 +26,7 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         [ResponseType(typeof(Int32))]
         [HttpPost]
         [Route("")]
-        public virtual async Task<IHttpActionResult> PostBase(Offer offer)
+        public virtual async Task<IHttpActionResult> Post(Offer offer)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,17 +35,17 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
             var register = await Service.CreateAsync(offer, token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            response.Content = new StringContent(JsonConvert.SerializeObject(register.Id), Encoding.UTF8, "application/json");
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
             return ResponseMessage(response);
         }
 
         [ResponseType(typeof(IList<Offer>))]
         [HttpGet]
-        [Route("")]
-        public virtual async Task<IHttpActionResult> Get()
+        [Route("GetActiveOffers/{pageSize:int:min(1)}/{pageIndex:int:min(1)}")]
+        public virtual async Task<IHttpActionResult> GetActiveOffers(int pageSize, int pageIndex)
         {
             CancellationTokenSource token = new CancellationTokenSource();
-            var registers = await Service.GetAsync(token);
+            var registers = await Service.GetActiveOffers(pageSize, pageIndex, token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(registers), Encoding.UTF8, "application/json");

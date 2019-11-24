@@ -13,7 +13,7 @@ namespace Kallsonys.PICA.ContractsRepositories.Base
         /// <param name="entity">            The entity. </param>
         /// <param name="cancellationToken"> The cancellation token. </param>
         /// <returns></returns>
-        Task<TEntity> CreateAsync(TEntity entity, CancellationTokenSource cancellationToken);
+        Task<Int32> CreateAsync(TEntity entity, CancellationTokenSource cancellationToken);
 
         /// <summary> Deletes the specified entity. </summary>
         /// <param name="entity"> The entity. </param>

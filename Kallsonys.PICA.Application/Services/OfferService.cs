@@ -3,6 +3,7 @@ using Kallsonys.PICA.Application.DTO.OfferDTO;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,14 +19,13 @@ namespace Kallsonys.PICA.Application.Services
             this.Repository = repository;
         }
 
-        public async Task<Offer> CreateAsync(Offer offer, CancellationTokenSource token)
+        public async Task<Int32> CreateAsync(Offer offer, CancellationTokenSource token)
         {
             B2COffer newOffer = offer.AdapterOffer();
             var result = await Repository.CreateAsync(newOffer, token);
-            return result.AdapterOffer();
+            return result;
         }
-
-        public async Task<IEnumerable<Offer>> GetAsync(CancellationTokenSource token)
+        public async Task<IEnumerable<Offer>> GetActiveOffers(int pageSize, int pageIndex, CancellationTokenSource token)
         {
             var result = await Repository.GetByExpressionAsync(x => x.EndDate <= System.DateTime.Now, token);
             return result.AdapterOffer();

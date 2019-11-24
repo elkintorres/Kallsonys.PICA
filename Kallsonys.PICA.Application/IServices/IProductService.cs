@@ -10,14 +10,16 @@ namespace Kallsonys.PICA.Application.IServices
     {
         Task<Product> GetByIdAsync(int id, CancellationTokenSource token);
 
-        Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token);
+        Task<IList<Product>> GetByCodeAsync(string code, int pageSize, int pageIndex,  CancellationTokenSource token);
 
-        Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageCount, CancellationTokenSource token);
+        Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageSize, int PageIndex, CancellationTokenSource token);
 
-        Task<IList<Product>> GetTopFiveAsync(IList<Int32> topFive, CancellationTokenSource token);
+        Task<IList<Product>> GetAllByIdsAsync(IList<Int32> ids, CancellationTokenSource token);
 
         Task<int> CreateAsync(Product register, CancellationTokenSource token);
 
         Task<IList<Product>>GetByAll(int pageCount, int pageIndex, CancellationTokenSource token);
+
+        Task<int> GetCountAll(CancellationTokenSource token);
     }
 }

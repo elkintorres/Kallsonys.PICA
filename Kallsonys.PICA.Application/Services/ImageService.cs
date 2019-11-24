@@ -1,44 +1,34 @@
 ﻿using Kallsonys.PICA.Application.Adapters;
+using Kallsonys.PICA.Application.DTO.ImageDTO;
 using Kallsonys.PICA.Application.IServices;
+using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kallsonys.PICA.Application.Services
 {
     public class ImageService : IImageService
     {
-        public B2CImage SaveSingleImage(Kallsonys.PICA.Application.DTO.ImageDTO.Image source, string productCode)
+        private IImageRepository Repository { get; set; }
+        public ImageService(IImageRepository repository)
         {
-            string baseURL = ConfigurationManager.AppSettings["StorageImages"];
-
-            var directory = $"{baseURL}{productCode}";
-            if (Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-
-            using (MemoryStream mStream = new MemoryStream(source.SourceImage))
-            {
-                Image _image = Image.FromStream(mStream);
-                var urlImage = $"{directory}//{source.Name}";
-                _image.Save(urlImage);
-                source.Url = urlImage;
-            }
-
-            return source.AdapterImage();
+            this.Repository = repository;
         }
-
-        public IEnumerable<B2CImage> SaveMultipleImage(IList<Kallsonys.PICA.Application.DTO.ImageDTO.Image> source, string productCode)
+        public async Task<int> CreateAsync(IList<Image> registers, int idProduct, CancellationTokenSource token)
         {
-            foreach (var item in source)
+            IList<B2CImage> newImages = registers.AdapterImage().ToList();
+
+            foreach (var item in newImages)
             {
-                yield return SaveSingleImage(item, productCode);
+                item.IdProduct = idProduct;
             }
+
+
+            var result = await Repository.CreateAsync(newImages.ToList(), token);
+            return result;
         }
     }
 }

@@ -21,7 +21,8 @@ namespace Kallsonys.PICA.Application.Adapters
                     Description = origin.Description,
                     BeginDate = origin.BeginDate,
                     EndDate = origin.EndDate,
-                    Discount = origin.Discount
+                    Discount = origin.Discount,
+                    B2CImage = new List<B2CImage>() { origin.Image?.AdapterImage() }
                 };
         }
 
@@ -39,7 +40,8 @@ namespace Kallsonys.PICA.Application.Adapters
                     Description = origin.Description,
                     BeginDate = origin.BeginDate,
                     EndDate = origin.EndDate,
-                    Discount = origin.Discount
+                    Discount = origin.Discount,
+                    Image = origin.B2CImage?.AsQueryable().AdapterImage().First()
                 };
         }
 

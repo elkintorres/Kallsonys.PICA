@@ -5,9 +5,6 @@ using Kallsonys.PICA.ContractsRepositories;
 using Kallsonys.PICA.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -35,14 +32,12 @@ namespace Kallsonys.PICA.Application.Services
         public async Task<int> CreateAsync(Product register, CancellationTokenSource token)
         {
             B2CProduct newProduct = register.AdapterProduct();
-            if (register.Images != null)
-            {
-                IEnumerable<B2CImage> imagesProduct = ServiceImage.SaveMultipleImage(register.Images.ToList(), register.Code);
-                newProduct.B2CImage = imagesProduct.ToList();
-            }
-
             var result = await Repository.CreateAsync(newProduct, token);
-            return result.IdProduct;
+            if(register.Images != null && register.Images.Any())
+            {
+                await ServiceImage.CreateAsync(register.Images, result, token);
+            }
+            return result;
         }
 
         public async Task<IList<Product>> GetByAll(int pageCount, int pageIndex, CancellationTokenSource token)
@@ -51,30 +46,32 @@ namespace Kallsonys.PICA.Application.Services
             return listProducts.AdapterProduct().ToList();
         }
 
-        public async Task<IList<Product>> GetByCodeAsync(string code, CancellationTokenSource token)
+        public async Task<IList<Product>> GetByCodeAsync(string code, int pageSize, int pageIndex, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByCodeAsync(code, token);
+            var listProducts = await Repository.GetByCodeAsync(code,  pageSize, pageIndex, token);
             return listProducts.AdapterProduct().ToList();
         }
 
-        public async Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageCount, CancellationTokenSource token)
+        public async Task<IList<Product>> GetByCriteriaAsync(string criteria, int pageSize, int PageIndex, CancellationTokenSource token)
         {
-            var criteriaSql = criteria.Replace("*", "");
-            Expression<Func<B2CProduct, bool>> predecate = null;
-            if (criteria.StartsWith("*"))
-            {
-                predecate = (x => x.Name.EndsWith(criteriaSql) || x.Description.EndsWith(criteriaSql));
-            }
-            else if (criteria.EndsWith("*"))
-            {
-                predecate = (x => x.Name.StartsWith(criteriaSql) || x.Description.StartsWith(criteriaSql));
-            }
-            else
-            {
-                predecate = (x => x.Name.Contains(criteriaSql) || x.Description.Contains(criteriaSql));
-            }
+            //int startPage = (pageSize * (PageIndex - 1)) + 1, endPage = startPage + pageSize;
 
-            var listProducts = await Repository.GetByExpressionAsync(predecate, pageCount, token);
+            //var criteriaSql = criteria.Replace("*", "");
+            //Expression<Func<B2CProduct, bool>> predecate = null;
+            //if (criteria.StartsWith("*"))
+            //{
+            //    predecate = (x => x.Name.EndsWith(criteriaSql) || x.Description.EndsWith(criteriaSql) && x.IdProduct > startPage && x.IsActive == true);
+            //}
+            //else if (criteria.EndsWith("*"))
+            //{
+            //    predecate = (x => x.Name.StartsWith(criteriaSql) || x.Description.StartsWith(criteriaSql) && x.IdProduct > startPage && x.IsActive == true);
+            //}
+            //else
+            //{
+            //    predecate = (x => (x.Name.Contains(criteriaSql) || x.Description.Contains(criteriaSql)) && x.IdProduct > startPage && x.IsActive == true);
+            //}
+
+            var listProducts = await Repository.GetByCriteria(criteria, pageSize, PageIndex, token);
             return listProducts.AdapterProduct().ToList();
         }
 
@@ -85,10 +82,15 @@ namespace Kallsonys.PICA.Application.Services
             return register.AdapterProduct();
         }
 
-        public async Task<IList<Product>> GetTopFiveAsync(IList<int> topFive, CancellationTokenSource token)
+        public async Task<IList<Product>> GetAllByIdsAsync(IList<int> ids, CancellationTokenSource token)
         {
-            var listProducts = await Repository.GetByExpressionAsync(x => topFive.Contains(x.IdProduct), token);
+            var listProducts = await Repository.GetAllByIdsAsync(ids, token);
             return listProducts.AdapterProduct().ToList();
+        }
+
+        public async Task<int> GetCountAll(CancellationTokenSource token)
+        {
+            return await Repository.GetCountAll(token);
         }
     }
 }

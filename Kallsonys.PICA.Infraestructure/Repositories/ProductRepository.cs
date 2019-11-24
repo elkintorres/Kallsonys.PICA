@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Kallsonys.PICA.ContractsRepositories;
+using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
+using Kallsonys.PICA.CrossCutting.Configuration.Messages;
+using Kallsonys.PICA.Domain.Entities;
+using RepoDb;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Kallsonys.PICA.ContractsRepositories;
-using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
-using Kallsonys.PICA.CrossCutting.Configuration.Messages;
-using Kallsonys.PICA.Domain.Entities;
-using RepoDb;
 
 namespace Kallsonys.PICA.Infraestructure.Repositories
 {
@@ -21,17 +21,15 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<B2CProduct> CreateAsync(B2CProduct entity, CancellationTokenSource cancellationToken)
+        public async Task<Int32> CreateAsync(B2CProduct entity, CancellationTokenSource cancellationToken)
         {
             try
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
                     var id = await connection.InsertAsync<int>("B2CProduct", entity);
-                    entity.IdProduct = id;
+                    return id;
                 }
-
-                return entity;
             }
             catch (Exception exc)
             {
@@ -57,11 +55,15 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
+                    var products = await connection.QueryAsync<B2CProduct>(predicate, hints: "WITH (NOLOCK)");
+                    var images = await connection.QueryAsync<B2CImage>(x => products.Select(w => w.IdProduct).Contains(x.IdProduct), hints: "WITH (NOLOCK)");
 
+                    foreach (var product in products)
+                    {
+                        product.B2CImage = images.Where(x => x.IdProduct == product.IdProduct).ToList();
+                    }
 
-
-                    var result = await connection.QueryAsync<B2CProduct>(predicate, hints: "WITH (NOLOCK)");
-                    return result.AsQueryable();
+                    return products.AsQueryable();
                 }
             }
             catch (Exception exc)
@@ -72,17 +74,16 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             }
         }
 
-        public async Task<IQueryable<B2CProduct>> GetByCodeAsync(string code, CancellationTokenSource cancellationToken)
+        public async Task<IQueryable<B2CProduct>> GetAllByIdsAsync(IList<int> ids, CancellationTokenSource token)
         {
             try
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-
                     // Get the parent customer, and the child objects
                     var result = await connection.QueryMultipleAsync<B2CProduct, B2CImage>(
-                        product => product.Code == code,
-                        image => image.B2CProduct.Code == code);
+                        product => ids.Contains(product.IdProduct),
+                        image => ids.Contains(image.B2CProduct.IdProduct));
 
                     foreach (var product in result.Item1)
                     {
@@ -93,19 +94,117 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             }
             catch (Exception exc)
             {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public async Task<IQueryable<B2CProduct>> GetByCodeAsync(string code, int pageSize, int pageIndex, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+
+                    int startPage = (pageSize * (pageIndex - 1)), endPage = startPage + pageSize;
+                    startPage += 1;
+
+                    string filterSql = $"{code}";
+
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where code = @filterSql and IsActive = 0) as x where rn between @startPage and @endPage";
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("filterSql", filterSql),
+                        new QueryField("startPage", startPage),
+                        new QueryField("endPage", endPage)
+                    });
+
+                    // Execute the SQL
+                    var products = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
+
+                    if (products.Any())
+                    {
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
+
+                        var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
+
+                        foreach (var product in products)
+                        {
+                            product.B2CImage = images.Where(x => x.IdProduct == product.IdProduct).ToList();
+                        }
+                    }
+                    return products.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
                 cancellationToken.Cancel(true);
                 string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
                 throw new InfraestructureExcepcion(mensaje, exc);
             }
         }
 
-        public async Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predicate, int pageCount, CancellationTokenSource cancellationToken)
+        public async Task<IQueryable<B2CProduct>> GetByCriteria(string criteria, int pageSize, int pageIndex, CancellationTokenSource token)
         {
             try
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.QueryAsync<B2CProduct>(predicate, top: pageCount, hints: "WITH (NOLOCK)");
+                    int startPage = (pageSize * (pageIndex - 1)), endPage = startPage + pageSize;
+                    startPage += 1;
+
+                    string filterSql = "";
+                    var criteriaSql = criteria.Replace("@", "");
+
+                    if (criteria.StartsWith("@"))
+                        filterSql = $"%{criteriaSql}";
+                    else if (criteria.EndsWith("@"))
+                        filterSql = $"{criteriaSql}%";
+                    else
+                        filterSql = $"{criteriaSql}";
+
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where  name like @filterSql or description like @filterSql and IsActive = 0) as x where rn between @startPage and @endPage";
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("filterSql", filterSql),
+                        new QueryField("startPage", startPage),
+                        new QueryField("endPage", endPage)
+                    });
+
+                    // Execute the SQL
+                    var products = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
+
+                    if (products.Any())
+                    {
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
+
+                        var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
+
+                        foreach (var product in products)
+                        {
+                            product.B2CImage = images.Where(x => x.IdProduct == product.IdProduct).ToList();
+                        }
+                    }
+                    return products.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+        public async Task<IQueryable<B2CProduct>> GetByExpressionAsync(Expression<Func<B2CProduct, bool>> predicate, int pageSize, CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.QueryAsync<B2CProduct>(predicate, top: pageSize, hints: "WITH (NOLOCK)");
                     return result.AsQueryable();
                 }
             }
@@ -123,8 +222,19 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.QueryAsync<B2CProduct>(c => c.IdProduct == key, hints: "WITH (NOLOCK)");
-                    return result.FirstOrDefault();
+                    var result = await connection.QueryMultipleAsync<B2CProduct, B2CImage>(
+                      product => product.IdProduct == key,
+                      image => image.IdProduct == key,
+                      top1: 100,
+                      hints1: "WITH (NOLOCK)",
+                      hints2: "WITH (NOLOCK)");
+
+                    foreach (var product in result.Item1)
+                    {
+                        product.B2CImage = result.Item2.Where(x => x.IdProduct == product.IdProduct).ToList();
+                    }
+
+                    return result.Item1.FirstOrDefault();
                 }
             }
             catch (Exception exc)
@@ -145,24 +255,38 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<B2CProduct>> GetAllAsync(int pageCount, int pageIndex, CancellationTokenSource token)
+        public async Task<IQueryable<B2CProduct>> GetAllAsync(int pageSize, int pageIndex, CancellationTokenSource token)
         {
             try
             {
+                int startPage = (pageSize * (pageIndex - 1)) , endPage = startPage + pageSize;
+
+                startPage += 1;
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
 
-                    var commandText = "select top (@pageCount) * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK)) as x where rn between @pageIndex and @pageIndex + @pageCount";
+                    var commandText = "select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * FROM [dbo].[B2CProduct] WITH (NOLOCK) WHERE IsActive = 0) as x where rn between @startPage and @endPage";
                     var param = new QueryGroup(new[]
                     {
-                        new QueryField("pageCount", pageCount),
-                        new QueryField("pageIndex", pageIndex)
+                        new QueryField("startPage", startPage),
+                        new QueryField("endPage", endPage)
                     });
 
                     // Execute the SQL
-                    var result = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
+                    var products = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
+                    if (products.Any())
+                    {
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
 
-                    return result.AsQueryable();
+                        var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
+
+                        foreach (var product in products)
+                        {
+                            product.B2CImage = images.Where(x => x.IdProduct == product.IdProduct).ToList();
+                        }
+                    }
+                    return products.AsQueryable();
                 }
             }
             catch (Exception exc)
@@ -172,5 +296,26 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                 throw new InfraestructureExcepcion(mensaje, exc);
             }
         }
+
+        public async Task<int> GetCountAll(CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2CProduct] WITH (NOLOCK) WHERE IsActive = 0 ;");
+                    return Convert.ToInt32(result);
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+
+        }
+
+
     }
 }
