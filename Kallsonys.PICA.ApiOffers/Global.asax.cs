@@ -15,5 +15,13 @@ namespace Kallsonys.PICA.ApiOffers
             GlobalConfiguration.Configure(WebApiConfig.Register);
             IoC.RegistrarTipos(GlobalConfiguration.Configuration);
         }
+
+        protected void Application_PreSendRequestHeaders()
+        {
+            // removing excessive headers. They don't need to see this.
+            Response.Headers.Remove("Server");
+            Response.Headers.Remove("X-Powered-By");
+        }
+
     }
 }

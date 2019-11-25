@@ -56,7 +56,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
                     var products = await connection.QueryAsync<B2CProduct>(predicate, hints: "WITH (NOLOCK)");
-                    var images = await connection.QueryAsync<B2CImage>(x => products.Select(w => w.IdProduct).Contains(x.IdProduct), hints: "WITH (NOLOCK)");
+                    var images = await connection.QueryAsync<B2CImage>(x => products.Select(w => w.IdProduct).Contains(x.IdProduct) && x.IdOffer == null, hints: "WITH (NOLOCK)");
 
                     foreach (var product in products)
                     {
@@ -83,7 +83,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                     // Get the parent customer, and the child objects
                     var result = await connection.QueryMultipleAsync<B2CProduct, B2CImage>(
                         product => ids.Contains(product.IdProduct),
-                        image => ids.Contains(image.B2CProduct.IdProduct));
+                        image => ids.Contains(image.B2CProduct.IdProduct) && image.IdOffer == null);
 
                     foreach (var product in result.Item1)
                     {
@@ -112,7 +112,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
                     string filterSql = $"{code}";
 
-                    var commandText = $"select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where code = @filterSql and IsActive = 0) as x where rn between @startPage and @endPage";
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where code = @filterSql and IsActive = 1) as x where rn between @startPage and @endPage";
                     var param = new QueryGroup(new[]
                     {
                         new QueryField("filterSql", filterSql),
@@ -125,7 +125,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
                     if (products.Any())
                     {
-                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdOffer is null and IdProduct IN (@Keys);";
                         param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
 
                         var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
@@ -165,7 +165,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                     else
                         filterSql = $"{criteriaSql}";
 
-                    var commandText = $"select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where  name like @filterSql or description like @filterSql and IsActive = 0) as x where rn between @startPage and @endPage";
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by [IdProduct] asc) as rn, * from [dbo].[B2CProduct] WITH (NOLOCK) where  name like @filterSql or description like @filterSql and IsActive = 1) as x where rn between @startPage and @endPage";
                     var param = new QueryGroup(new[]
                     {
                         new QueryField("filterSql", filterSql),
@@ -178,7 +178,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
                     if (products.Any())
                     {
-                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdOffer is null and IdProduct IN (@Keys);";
                         param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
 
                         var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
@@ -224,7 +224,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                 {
                     var result = await connection.QueryMultipleAsync<B2CProduct, B2CImage>(
                       product => product.IdProduct == key,
-                      image => image.IdProduct == key,
+                      image => image.IdProduct == key && image.IdOffer == null,
                       top1: 100,
                       hints1: "WITH (NOLOCK)",
                       hints2: "WITH (NOLOCK)");
@@ -259,13 +259,13 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
         {
             try
             {
-                int startPage = (pageSize * (pageIndex - 1)) , endPage = startPage + pageSize;
+                int startPage = (pageSize * (pageIndex - 1)), endPage = startPage + pageSize;
 
                 startPage += 1;
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
 
-                    var commandText = "select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * FROM [dbo].[B2CProduct] WITH (NOLOCK) WHERE IsActive = 0) as x where rn between @startPage and @endPage";
+                    var commandText = "select * from (select ROW_NUMBER() over(order by[IdProduct] asc) as rn, * FROM [dbo].[B2CProduct] WITH (NOLOCK) WHERE IsActive = 1) as x where rn between @startPage and @endPage";
                     var param = new QueryGroup(new[]
                     {
                         new QueryField("startPage", startPage),
@@ -276,7 +276,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                     var products = await connection.ExecuteQueryAsync<B2CProduct>(commandText, param);
                     if (products.Any())
                     {
-                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdProduct IN (@Keys);";
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdOffer is null and IdProduct IN (@Keys);";
                         param = new QueryGroup(new QueryField("Keys", products.Select(w => w.IdProduct).ToArray()));
 
                         var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
@@ -303,7 +303,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2CProduct] WITH (NOLOCK) WHERE IsActive = 0 ;");
+                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2CProduct] WITH (NOLOCK) WHERE IsActive = 1 ;");
                     return Convert.ToInt32(result);
                 }
             }
@@ -316,6 +316,30 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
         }
 
-
+        public async Task<bool> DisableById(int id, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.QueryAsync<B2CProduct>(x => x.IdProduct == id, hints: "WITH (NOLOCK)");
+                    if (result.Any())
+                    {
+                        var product = result.First();
+                        product.IsActive = false;
+                        var affectedRows = connection.Update("B2CProduct", product, new QueryField("IdProduct", id));
+                        return affectedRows > 0;
+                    }
+                    else
+                        return false;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
     }
 }

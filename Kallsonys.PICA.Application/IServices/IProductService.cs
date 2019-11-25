@@ -21,5 +21,7 @@ namespace Kallsonys.PICA.Application.IServices
         Task<IList<Product>>GetByAll(int pageCount, int pageIndex, CancellationTokenSource token);
 
         Task<int> GetCountAll(CancellationTokenSource token);
+
+        Task<Boolean> DisableById(int id, CancellationTokenSource token);
     }
 }

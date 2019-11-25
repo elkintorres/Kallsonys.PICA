@@ -27,6 +27,9 @@ namespace Kallsonys.PICA.Application.DTO.OfferDTO
         [Required]
         public int IdProduct { get; set; }
 
+        [Required]
+        public bool IsActive { get; set; }
+
         public Image Image { get; set; }
     }
 }

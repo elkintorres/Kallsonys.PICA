@@ -55,9 +55,62 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                     int startPage = (pageSize * (pageIndex - 1)), endPage = startPage + pageSize;
                     startPage += 1;
 
-                    var commandText = $"select * from (select ROW_NUMBER() over(order by [IdOffer] asc) as rn, * from [dbo].[B2COffer] WITH (NOLOCK) where GETDATE() between BeginDate and EndDate and IsActive = 0) as x where rn between @startPage and @endPage";
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by [IdOffer] asc) as rn, * from [dbo].[B2COffer] WITH (NOLOCK) where GETDATE() between BeginDate and EndDate and IsActive = 1) as x where rn between @startPage and @endPage";
                     var param = new QueryGroup(new[]
                     {
+                        new QueryField("startPage", startPage),
+                        new QueryField("endPage", endPage)
+                    });
+
+                    // Execute the SQL
+                    var offers = await connection.ExecuteQueryAsync<B2COffer>(commandText, param);
+
+                    if (offers.Any())
+                    {
+                        commandText = "SELECT * FROM [dbo].[B2CImage]  WITH (NOLOCK) WHERE IdOffer IN (@Keys);";
+                        param = new QueryGroup(new QueryField("Keys", offers.Select(w => w.IdOffer).ToArray()));
+
+                        var images = await connection.ExecuteQueryAsync<B2CImage>(commandText, param);
+
+                        foreach (var offer in offers)
+                        {
+                            offer.B2CImage = images.Where(x => x.IdOffer == offer.IdOffer).ToList();
+                        }
+                    }
+                    return offers.AsQueryable();
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public async Task<IQueryable<B2COffer>> GetByCriteria(string criteria, int pageSize, int pageIndex, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    int startPage = (pageSize * (pageIndex - 1)), endPage = startPage + pageSize;
+                    startPage += 1;
+
+                    string filterSql = "";
+                    var criteriaSql = criteria.Replace("@", "");
+
+                    if (criteria.StartsWith("@"))
+                        filterSql = $"%{criteriaSql}";
+                    else if (criteria.EndsWith("@"))
+                        filterSql = $"{criteriaSql}%";
+                    else
+                        filterSql = $"{criteriaSql}";
+
+                    var commandText = $"select * from (select ROW_NUMBER() over(order by [IdOffer] asc) as rn, * from [dbo].[B2COffer] WITH (NOLOCK) where  Name like @filterSql or description like @filterSql and IsActive = 1) as x where rn between @startPage and @endPage";
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("filterSql", filterSql),
                         new QueryField("startPage", startPage),
                         new QueryField("endPage", endPage)
                     });
@@ -117,8 +170,18 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             {
                 using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
                 {
-                    var result = await connection.QueryAsync<B2COffer>(c => c.IdOffer == key, hints: "WITH (NOLOCK)");
-                    return result.FirstOrDefault();
+                    var result = await connection.QueryMultipleAsync<B2COffer, B2CImage>(
+                      offer => offer.IdOffer == key,
+                      image => image.IdOffer == key,
+                      top1: 100,
+                      hints1: "WITH (NOLOCK)",
+                      hints2: "WITH (NOLOCK)");
+
+                    foreach (var offer in result.Item1)
+                    {
+                        offer.B2CImage = result.Item2.Where(x => x.IdOffer == offer.IdOffer).ToList();
+                    }
+                    return result.Item1.FirstOrDefault();
                 }
             }
             catch (Exception exc)
@@ -127,7 +190,6 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                 string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
                 throw new InfraestructureExcepcion(mensaje, exc);
             }
-
         }
 
         public IQueryable<B2COffer> GetPagedElements<S>(int pageIndex, int pageCount, Expression<Func<B2COffer, S>> orderByExpression, Expression<Func<B2COffer, bool>> predicate, bool ascending, IList<string> includes)
@@ -138,6 +200,49 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
         public Task<B2COffer> UpdateAsync(B2COffer entity, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> GetCountAll(CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2COffer] WITH (NOLOCK) WHERE IsActive = 1 ;");
+                    return Convert.ToInt32(result);
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+        public async Task<bool> DisableById(int id, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var result = await connection.QueryAsync<B2COffer>(x => x.IdOffer == id, hints: "WITH (NOLOCK)");
+                    if (result.Any())
+                    {
+                        var offer = result.First();
+                        offer.IsActive = false;
+                        var affectedRows = connection.Update("B2COffer", offer, new QueryField("IdOffer", id));
+                        return affectedRows > 0;
+                    }
+                    else
+                        return false;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         /// <returns>MultipleProductByCriteriaGet</returns>
         [ResponseType(typeof(IList<Product>))]
         [HttpGet]
-        [Route("GetByCriteria/{criterialength(4,50)}/{pageSize:int:min(1)}/{pageIndex:int:min(1)}")]
+        [Route("GetByCriteria/{criteria:length(4,50)}/{pageSize:int:min(1)}/{pageIndex:int:min(1)}")]
         public virtual async Task<IHttpActionResult> GetByCriteria([FromUri] string criteria, int pageSize = 100, int pageIndex = 0)
         {
             CancellationTokenSource token = new CancellationTokenSource();
@@ -117,7 +117,6 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
             response.Headers.Add("X-Total-Count", countRegisters.ToString());
 
             return ResponseMessage(response);
-
         }
 
         /// <summary>
@@ -138,5 +137,17 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
             return ResponseMessage(response);
         }
 
+        [ResponseType(typeof(Boolean))]
+        [HttpDelete]
+        [Route("DisableById/{id}")]
+        public virtual async Task<IHttpActionResult> DisableById([FromUri] int id)
+        {
+            CancellationTokenSource token = new CancellationTokenSource();
+            var register = await Service.DisableById(id, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
     }
 }

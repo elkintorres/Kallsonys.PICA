@@ -40,5 +40,8 @@ namespace Kallsonys.PICA.Application.DTO.ProductDTO
 
         [Required]
         public int IdProvider { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; }
     } // end class
 } // end Models namespace

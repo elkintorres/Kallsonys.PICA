@@ -27,6 +27,7 @@ namespace Kallsonys.PICA.Application.Adapters
                     IdProducer = source.IdProducer,
                     IdProvider = source.IdProvider,
                     ListPrice = source.ListPrice,
+                    IsActive = source.IsActive,
                     B2CImage = source.Images?.AsQueryable().AdapterImage().ToList()
                 };
         }
@@ -51,6 +52,7 @@ namespace Kallsonys.PICA.Application.Adapters
                     IdProducer = source.IdProducer,
                     IdProvider = source.IdProvider,
                     ListPrice = source.ListPrice,
+                    IsActive = source.IsActive,
                     Images = source.B2CImage?.AsQueryable().AdapterImage().ToList()
                 };
         }

@@ -11,6 +11,8 @@ namespace Kallsonys.PICA.Application.IServices
 {
     public interface IImageService
     {
-        Task<int> CreateAsync(IList<Image> register, int idProduct, CancellationTokenSource token);
+        Task<int> CreateAsync(IList<Image> register, int idProduct,  CancellationTokenSource token);
+
+        Task<int> CreateAsync(Image register, int idProduct, int idOffer, CancellationTokenSource token);
     }
 }
