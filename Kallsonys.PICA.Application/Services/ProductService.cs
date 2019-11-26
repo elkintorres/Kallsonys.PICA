@@ -2,7 +2,10 @@
 using Kallsonys.PICA.Application.DTO.ProductDTO;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
+using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
+using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 using Kallsonys.PICA.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -77,7 +80,32 @@ namespace Kallsonys.PICA.Application.Services
 
         public async Task<bool> DisableById(int id, CancellationTokenSource token)
         {
-            return await Repository.DisableById(id, token);
+            bool exists = await Repository.ExistAsync(id, token);
+            if (exists)
+            {
+                return await Repository.DisableById(id, token);
+            }
+            else
+            {
+                string msg = String.Format(MessagesApplication.NotFoundCode, id);
+                throw new BussinesException(msg, null);
+            }
+        }
+
+        public async Task<bool> Update(Product product, CancellationTokenSource token)
+        {
+            bool exists = await Repository.ExistAsync(product.Id, token);
+            if (exists)
+            {
+                B2CProduct updateProduct = product.AdapterProduct();
+                var result = await Repository.UpdateAsync(updateProduct, token);
+                return result;
+            }
+            else
+            {
+                string msg = String.Format(MessagesApplication.NotFoundCode, product.Id);
+                throw new BussinesException(msg, null);
+            }
         }
     }
 }

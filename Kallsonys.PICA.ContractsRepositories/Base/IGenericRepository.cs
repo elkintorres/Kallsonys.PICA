@@ -23,7 +23,7 @@ namespace Kallsonys.PICA.ContractsRepositories.Base
         /// <param name="entity">            The entity. </param>
         /// <param name="cancellationToken"> The cancellation token. </param>
         /// <returns></returns>
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationTokenSource cancellationToken);
+        Task<Boolean> UpdateAsync(TEntity entity, CancellationTokenSource cancellationToken);
 
         /// <summary> Counts the asynchronous. </summary>
         /// <param name="predicate">         The predicate. </param>

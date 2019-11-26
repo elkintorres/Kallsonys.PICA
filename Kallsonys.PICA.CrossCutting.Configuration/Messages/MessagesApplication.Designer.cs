@@ -79,7 +79,7 @@ namespace Kallsonys.PICA.CrossCutting.Configuration.Messages {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1.
+        ///   Busca una cadena traducida similar a No existe registro en la BD con Id  {0}..
         /// </summary>
         public static string NotFoundCode {
             get {

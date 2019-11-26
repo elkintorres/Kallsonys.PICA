@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\BussinesException.cs" />
     <Compile Include="Exceptions\InfraestructureExcepcion.cs" />
     <Compile Include="Exceptions\KallsonysException.cs" />
     <Compile Include="Messages\MessagesApplication.Designer.cs">

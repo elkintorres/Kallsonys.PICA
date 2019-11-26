@@ -71,7 +71,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<B2CImage> UpdateAsync(B2CImage entity, CancellationTokenSource cancellationToken)
+        public Task<Boolean> UpdateAsync(B2CImage entity, CancellationTokenSource cancellationToken)
         {
             throw new NotImplementedException();
         }

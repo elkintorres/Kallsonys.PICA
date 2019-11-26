@@ -51,11 +51,9 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.GetByAll(pageSize, pageIndex, token);
-            var countRegisters = await Service.GetCountAll(token);
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
 
-            response.Headers.Add("X-Total-Count", countRegisters.ToString());
             return ResponseMessage(response);
         }
 
@@ -89,11 +87,9 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var registers = await Service.GetByCodeAsync(code, pageSize, pageIndex, token);
-            var countRegisters = await Service.GetCountAll(token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(registers), Encoding.UTF8, "application/json");
-            response.Headers.Add("X-Total-Count", countRegisters.ToString());
 
             return ResponseMessage(response);
         }
@@ -110,11 +106,9 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.GetByCriteriaAsync(criteria, pageSize, pageIndex, token);
-            var countRegisters = await Service.GetCountAll(token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
-            response.Headers.Add("X-Total-Count", countRegisters.ToString());
 
             return ResponseMessage(response);
         }
@@ -149,5 +143,36 @@ namespace Kallsonys.PICA.ApiProducts.Controllers
             response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
             return ResponseMessage(response);
         }
+
+        [ResponseType(typeof(Boolean))]
+        [HttpPut]
+        [Route("")]
+        public virtual async Task<IHttpActionResult> Update(Product product)
+        {
+            if (!ModelState.IsValid || product.Id == 0)
+                return BadRequest(ModelState);
+
+            CancellationTokenSource token = new CancellationTokenSource();
+            var register = await Service.Update(product, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
+
+
+        [ResponseType(typeof(Int32))]
+        [HttpGet]
+        [Route("GetCountAll")]
+        public virtual async Task<IHttpActionResult> GetCountAll()
+        {
+            CancellationTokenSource token = new CancellationTokenSource();
+            var countRegisters = await Service.GetCountAll(token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(countRegisters), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
+
     }
 }

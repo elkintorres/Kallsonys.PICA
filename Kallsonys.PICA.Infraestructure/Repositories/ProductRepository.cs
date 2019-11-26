@@ -250,9 +250,22 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<B2CProduct> UpdateAsync(B2CProduct entity, CancellationTokenSource cancellationToken)
+        public async Task<Boolean> UpdateAsync(B2CProduct entity, CancellationTokenSource token)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var affectedRows = await connection.UpdateAsync("B2CProduct", entity, new QueryField("IdProduct", entity.IdProduct));
+                    return affectedRows > 0;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
         }
 
         public async Task<IQueryable<B2CProduct>> GetAllAsync(int pageSize, int pageIndex, CancellationTokenSource token)
@@ -316,6 +329,31 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
 
         }
 
+
+        public async Task<Boolean> ExistAsync(int id, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("id", id)
+                    });
+                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2CProduct] WITH (NOLOCK) WHERE IdProduct = @id ;", param);
+                    
+                    return result > 0;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+
+        }
+
         public async Task<bool> DisableById(int id, CancellationTokenSource token)
         {
             try
@@ -327,7 +365,7 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                     {
                         var product = result.First();
                         product.IsActive = false;
-                        var affectedRows = connection.Update("B2CProduct", product, new QueryField("IdProduct", id));
+                        var affectedRows = await connection.UpdateAsync("B2CProduct", product, new QueryField("IdProduct", id));
                         return affectedRows > 0;
                     }
                     else

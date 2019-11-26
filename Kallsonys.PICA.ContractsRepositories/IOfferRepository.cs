@@ -14,5 +14,6 @@ namespace Kallsonys.PICA.ContractsRepositories
         Task<int> GetCountAll(CancellationTokenSource token);
         Task<IQueryable<B2COffer>> GetByCriteria(string criteria, int pageSize, int pageIndex, CancellationTokenSource token);
         Task<Boolean> DisableById(int id, CancellationTokenSource token);
+        Task<Boolean> ExistAsync(int id, CancellationTokenSource token);
     }
 }

@@ -197,9 +197,22 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<B2COffer> UpdateAsync(B2COffer entity, CancellationTokenSource cancellationToken)
+        public async Task<Boolean> UpdateAsync(B2COffer entity, CancellationTokenSource token)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var affectedRows = await connection.UpdateAsync("B2COffer", entity, new QueryField("IdOffer", entity.IdOffer));
+                    return affectedRows > 0;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
         }
 
         public async Task<int> GetCountAll(CancellationTokenSource token)
@@ -243,6 +256,29 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
                 string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
                 throw new InfraestructureExcepcion(mensaje, exc);
             }
+        }
+        public async Task<Boolean> ExistAsync(int id, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    var param = new QueryGroup(new[]
+                    {
+                        new QueryField("id", id)
+                    });
+                    var result = await connection.ExecuteScalarAsync<Int32>("SELECT COUNT (1) AS [CountValue] FROM [B2COffer] WITH (NOLOCK) WHERE IdOffer = @id ;", param);
+
+                    return result > 0;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+
         }
     }
 }

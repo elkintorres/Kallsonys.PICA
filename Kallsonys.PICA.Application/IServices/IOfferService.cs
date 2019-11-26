@@ -19,5 +19,7 @@ namespace Kallsonys.PICA.Application.IServices
         Task<IList<Offer>> GetByCriteriaAsync(string criteria, int pageSize, int PageIndex, CancellationTokenSource token);
 
         Task<Boolean> DisableById(int id, CancellationTokenSource token);
+
+        Task<Boolean> Update(Offer offer, CancellationTokenSource token);
     }
 }

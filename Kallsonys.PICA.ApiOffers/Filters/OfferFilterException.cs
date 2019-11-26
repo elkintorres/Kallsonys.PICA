@@ -13,26 +13,28 @@ namespace Kallsonys.PICA.ApiOffers.Filters
     {
         public override void OnException(HttpActionExecutedContext context)
         {
-            //var controller = context.ActionContext.ControllerContext.ControllerDescriptor.ControllerName;
-            //var action = context.ActionContext.ActionDescriptor.ActionName;
-
             string error = string.Empty;
             int code = 0;
 
             if (context.Exception.GetType() == typeof(InfraestructureExcepcion))
             {
-                error = MessagesInfraestructure.ErrorBD;
+                error = context.Exception.Message;
                 code = 100;
+            }
+            else if (context.Exception.GetType() == typeof(BussinesException))
+            {
+                error = context.Exception.Message;
+                code = 200;
             }
             else if (context.Exception.GetType() == typeof(KallsonysException))
             {
                 error = MessagesApplication.ErrorApplication;
-                code = 200;
+                code = 300;
             }
             else
             {
                 error = MessagesApplication.ErrorNoControlado;
-                code = 200;
+                code = 400;
             }
 
             Error errorApp = new Error()
@@ -46,7 +48,6 @@ namespace Kallsonys.PICA.ApiOffers.Filters
 
             context.Response = response;
             base.OnException(context);
-
         }
 
     }

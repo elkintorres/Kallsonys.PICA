@@ -2,6 +2,8 @@
 using Kallsonys.PICA.Application.DTO.OfferDTO;
 using Kallsonys.PICA.Application.IServices;
 using Kallsonys.PICA.ContractsRepositories;
+using Kallsonys.PICA.CrossCutting.Configuration.Exceptions;
+using Kallsonys.PICA.CrossCutting.Configuration.Messages;
 using Kallsonys.PICA.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -68,6 +70,22 @@ namespace Kallsonys.PICA.Application.Services
         public async Task<bool> DisableById(int id, CancellationTokenSource token)
         {
             return await Repository.DisableById(id, token);
+        }
+
+        public async Task<bool> Update(Offer offer, CancellationTokenSource token)
+        {
+            bool exists = await Repository.ExistAsync(offer.Id, token);
+            if (exists)
+            {
+                B2COffer updateOffer = offer.AdapterOffer();
+                var result = await Repository.UpdateAsync(updateOffer, token);
+                return result;
+            }
+            else
+            {
+                string msg = String.Format(MessagesApplication.NotFoundCode, offer.Id);
+                throw new BussinesException(msg, null);
+            }
         }
     }
 }

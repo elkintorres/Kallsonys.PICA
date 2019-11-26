@@ -124,7 +124,7 @@
     <value>Se ha presentado una inconsistencia la procesar la solicitud</value>
   </data>
   <data name="NotFoundCode" xml:space="preserve">
-    <value>1</value>
+    <value>No existe registro en la BD con Id  {0}.</value>
   </data>
   <data name="NotFoundMessage" xml:space="preserve">
     <value>Not Found product with id {0}</value>

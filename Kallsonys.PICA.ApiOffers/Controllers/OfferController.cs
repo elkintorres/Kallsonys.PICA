@@ -39,6 +39,20 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
             return ResponseMessage(response);
         }
 
+        [ResponseType(typeof(Int32))]
+        [HttpGet]
+        [Route("GetCountAll")]
+        public virtual async Task<IHttpActionResult> GetCountAll()
+        {
+            CancellationTokenSource token = new CancellationTokenSource();
+            var countRegisters = await Service.GetCountAll(token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(countRegisters), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
+
+
         [ResponseType(typeof(IList<Offer>))]
         [HttpGet]
         [Route("GetActive/{pageSize:int:min(1)}/{pageIndex:int:min(1)}")]
@@ -46,11 +60,9 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var registers = await Service.GetActiveOffers(pageSize, pageIndex, token);
-            var countRegisters = await Service.GetCountAll(token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(registers), Encoding.UTF8, "application/json");
-            response.Headers.Add("X-Total-Count", countRegisters.ToString());
 
             return ResponseMessage(response);
         }
@@ -85,11 +97,9 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.GetByCriteriaAsync(criteria, pageSize, pageIndex, token);
-            var countRegisters = await Service.GetCountAll(token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
-            response.Headers.Add("X-Total-Count", countRegisters.ToString());
 
             return ResponseMessage(response);
         }
@@ -101,6 +111,22 @@ namespace Kallsonys.PICA.ApiOffers.Controllers
         {
             CancellationTokenSource token = new CancellationTokenSource();
             var register = await Service.DisableById(id, token);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");
+            return ResponseMessage(response);
+        }
+
+        [ResponseType(typeof(Boolean))]
+        [HttpPut]
+        [Route("")]
+        public virtual async Task<IHttpActionResult> Update(Offer offer)
+        {
+            if (!ModelState.IsValid || offer.Id == 0)
+                return BadRequest(ModelState);
+
+            CancellationTokenSource token = new CancellationTokenSource();
+            var register = await Service.Update(offer, token);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(JsonConvert.SerializeObject(register), Encoding.UTF8, "application/json");

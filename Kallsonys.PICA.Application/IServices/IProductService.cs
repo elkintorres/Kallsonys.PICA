@@ -23,5 +23,7 @@ namespace Kallsonys.PICA.Application.IServices
         Task<int> GetCountAll(CancellationTokenSource token);
 
         Task<Boolean> DisableById(int id, CancellationTokenSource token);
+
+        Task<Boolean> Update(Product product, CancellationTokenSource token);
     }
 }
