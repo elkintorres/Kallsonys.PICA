@@ -1,5 +1,6 @@
 ﻿using Kallsonys.PICA.ApiOffers.Filters;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Kallsonys.PICA.ApiOffers
 {
@@ -7,6 +8,9 @@ namespace Kallsonys.PICA.ApiOffers
     {
         public static void Register(HttpConfiguration config)
         {
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
+
             config.Filters.Add(new OfferFilterException());
             // Configuración y servicios de API web
 
