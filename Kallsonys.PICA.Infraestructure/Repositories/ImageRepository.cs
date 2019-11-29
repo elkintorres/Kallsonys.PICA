@@ -75,5 +75,49 @@ namespace Kallsonys.PICA.Infraestructure.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<int> Update2Async(B2CImage entity, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    int affectedRows = 0;
+
+                    affectedRows += await connection.UpdateAsync("B2CImage", entity, new QueryField("IdImage", entity.IdImage));
+
+                    return affectedRows;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
+
+        public async Task<int> UpdateAsync(List<B2CImage> list, CancellationTokenSource token)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+                {
+                    int affectedRows = 0;
+                    foreach (var image in list)
+                    {
+                        affectedRows += await connection.UpdateAsync("B2CImage", image, new QueryField("IdImage", image.IdImage));
+                    }
+
+                    return affectedRows;
+                }
+            }
+            catch (Exception exc)
+            {
+                token.Cancel(true);
+                string mensaje = String.Format(MessagesInfraestructure.ErrorGetByKeyAsync, "en Repositorio base");
+                throw new InfraestructureExcepcion(mensaje, exc);
+            }
+        }
     }
 }

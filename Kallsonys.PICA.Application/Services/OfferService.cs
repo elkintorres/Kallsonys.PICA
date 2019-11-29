@@ -79,6 +79,11 @@ namespace Kallsonys.PICA.Application.Services
             {
                 B2COffer updateOffer = offer.AdapterOffer();
                 var result = await Repository.UpdateAsync(updateOffer, token);
+
+                if (offer.Image != null)
+                {
+                    await ServiceImage.UpdateAsync(offer.Image, token);
+                }
                 return result;
             }
             else

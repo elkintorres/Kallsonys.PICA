@@ -40,5 +40,22 @@ namespace Kallsonys.PICA.Application.Services
             var result = await Repository.CreateAsync(new List<B2CImage>() { newImages }, token);
             return result;
         }
+
+        public async Task<int> UpdateAsync(IList<Image> images, CancellationTokenSource token)
+        {
+            IList<B2CImage> newImages = images.AdapterImage().ToList();
+
+
+            var result = await Repository.UpdateAsync(newImages.ToList(), token);
+            return result;
+        }
+
+        public async Task<int> UpdateAsync(Image image, CancellationTokenSource token)
+        {
+            B2CImage updateImage = image.AdapterImage();
+
+            var result = await Repository.Update2Async(updateImage, token);
+            return result;
+        }
     }
 }

@@ -99,6 +99,10 @@ namespace Kallsonys.PICA.Application.Services
             {
                 B2CProduct updateProduct = product.AdapterProduct();
                 var result = await Repository.UpdateAsync(updateProduct, token);
+                if (product.Images != null && product.Images.Any())
+                {
+                    await ServiceImage.UpdateAsync(product.Images, token);
+                }
                 return result;
             }
             else

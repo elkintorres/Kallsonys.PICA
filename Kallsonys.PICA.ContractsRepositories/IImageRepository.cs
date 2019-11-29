@@ -12,5 +12,8 @@ namespace Kallsonys.PICA.ContractsRepositories
     public interface IImageRepository : IGenericRepository<B2CImage, int>
     {
         Task<int> CreateAsync(IList<B2CImage> entity, CancellationTokenSource cancellationToken);
+        Task<int> UpdateAsync(List<B2CImage> list, CancellationTokenSource token);
+        Task<int> Update2Async(B2CImage entity, CancellationTokenSource token);
+
     }
 }
